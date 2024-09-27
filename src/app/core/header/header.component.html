@@ -1,0 +1,15 @@
+<p-toolbar class="mb-3">
+    <ng-template pTemplate="start">            
+        <i class="pi pi-prime text-7xl text-red-600"></i>
+    </ng-template>
+    <ng-template pTemplate="center">
+        <div class="flex flex-wrap align-items-center gap-3">
+            <p-button label="Home" [link]="true" routerLink="home"/>
+            <p-button label="Rxjs" [link]="true" routerLink="rxjs"/>
+            <p-button label="Vega" [link]="true" routerLink="vega"/>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="end">
+        <i class="pi pi-prime text-7xl text-red-600"></i>
+    </ng-template>
+</p-toolbar>
