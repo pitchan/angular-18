@@ -1,5 +1,84 @@
-<div>
-  <button (click)="loadRandomPokemon()">Charger un Pokémon aléatoire</button>
+<div class="grid">
+  <div class="col-6">    
+    <p-card styleClass="w-full mt-3 mb-3">
+      <div class="p-field-radiobutton">
+        <div class="flex justify-content-between">
+          <!-- RadioButton pour switchMap -->
+          <p-radioButton 
+            class="mr-3"
+            name="functionType" 
+            value="switchMap" 
+            [(ngModel)]="selectedFunction" 
+            (ngModelChange)="clearAll()"
+            label="switchMap">
+          </p-radioButton>
+
+            <!-- RadioButton pour mergeMap -->
+          <p-radioButton 
+            name="functionType" 
+            value="mergeMap" 
+            [(ngModel)]="selectedFunction" 
+            (ngModelChange)="clearAll()"
+            label="concatMap">
+          </p-radioButton>
+        </div> 
+      </div>   
+    </p-card>       
+  
+    <p-autoComplete
+      styleClass="w-full"
+      [formControl]="autoCompletePokemonControl"
+      [dropdown]="true"
+      [showClear]="true"
+      [suggestions]="filteredPokemons()"
+      (completeMethod)="filterPokemonsByName($event)"
+      (onSelect)="onPokemonSelect($event)"
+      optionLabel="name" />
+
+    <p-card styleClass="w-full mb-3 mt-3">  
+      @if (selectedPokemon()) {
+        <h1 class="text-700 text-center">{{ selectedPokemon()?.name }}</h1>
+        <div class="overflow-hidden text-center">
+          <p-image 
+            [src]="selectedPokemon()?.sprites?.picture"
+            [previewImageSrc]="selectedPokemon()?.sprites?.bigPicture"
+            alt="Pokemon Image"
+            [preview]="true"/>
+        </div>
+      } @else {
+        <h1 class="text-700 text-center">Select Pokemon</h1>
+      }     
+    </p-card>
+    
+  </div>
+  <div class="col-6">
+    <!-- Affichage des logs -->
+    <p-card styleClass="w-full mb-3 mt-3">
+      <div class="flex">
+        <div class="col-2">
+          <p-button icon="pi pi-trash" severity="danger" [disabled]="logMessages().length === 0" (click)="clearLogs()"/> 
+        </div> 
+        <p-divider layout="vertical" />
+        <div class="col-8 flex justify-content-center align-items-center">
+          <div class="text-700 text-2xl font-bold">Request Logs</div>
+        </div>
+      </div>
+      <p-divider />
+      <div>
+        @for(log of logMessages(); track log) {
+          <p-tag [severity]="log.type" [value]="log.message" styleClass="p-element mb-1"></p-tag>
+        } @empty {          
+          <h1 class="text-400">No logs</h1>
+        }
+      </div>
+    </p-card>  
+    
+    
+  </div>
+
+  
+
+  
 
 
   @if(loading()) {
@@ -14,6 +93,6 @@
 
   @if(pokemon()) {
     <h2>{{ pokemon()?.name | titlecase }} (ID: {{ pokemon()?.id }})</h2> 
-    <img [src]="pokemon()?.sprites?.front_default" alt="{{ pokemon()?.name }}" />   
+    <img [src]="pokemon()?.sprites?.picture" alt="{{ pokemon()?.name }}" />   
   }
 <div>

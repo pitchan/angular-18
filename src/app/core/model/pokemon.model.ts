@@ -1,7 +1,9 @@
 export interface Pokemon {
   name: string;
   id: number;
+  url: string,
   sprites: {
-    front_default: string;
+    picture: string;
+    bigPicture: string;
   };
 }
