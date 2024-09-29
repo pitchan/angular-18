@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { PokemonApiService } from '../../../core/services/pokemon-api.service';
 import { Pokemon } from '../../../core/model/pokemon.model';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -12,9 +12,8 @@ import { DividerModule } from 'primeng/divider';
 import { RxjsService } from '../services/rxjs.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { concatMap, debounceTime, distinctUntilChanged, exhaustMap, map, mergeMap, switchMap } from 'rxjs/operators';
+import { concatMap, debounceTime, distinctUntilChanged, exhaustMap, filter, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
-
 
 @Component({
   selector: 'app-rxjs',
@@ -22,11 +21,14 @@ import { of } from 'rxjs';
   imports: [CommonModule, AutoCompleteModule, ReactiveFormsModule, RadioButtonModule, FormsModule, TagModule, ButtonModule, CardModule, DividerModule, ImageModule],
   templateUrl: './rxjs.component.html',
 })
-export class RxjsComponent {
+export class RxjsComponent implements OnInit {
   private pokemonApiService = inject(PokemonApiService);
   private rxjsService = inject(RxjsService);
 
-  autoCompletePokemonControl = new FormControl();
+  autoCompleteSwitchMapControl = new FormControl();
+  autoCompleteConcatMapControl = new FormControl();
+  autoCompleteMergeMapControl = new FormControl();
+  autoCompleteExhaustMapControl = new FormControl();
   
   loading = signal<boolean>(false);
   logMessages = signal<{message: string, type: 'info' | 'success'}[]>([]);
@@ -35,9 +37,18 @@ export class RxjsComponent {
   filteredPokemons = signal<Pokemon[]>([]);        // Signal pour la liste des Pokémon filtrés
   error = signal<string>('');
 
-  selectedFunction: 'switchMap' | 'mergeMap' = 'switchMap';
+  selectedOperator = 'switchMap';
+  operatorControl = new FormControl('switchMap'); // Valeur initiale
 
   constructor() {}
+
+  ngOnInit() {
+    // Ecoute les changements de valeurs de l'autoComplete
+    this.initAutocompleteSwitchMapObservable();
+    this.initAutocompleteConcatMapObservable();
+    this.initAutocompleteMergeMapObservable();
+    this.initAutocompleteExhaustMapObservable();
+  }
 
   loadRandomPokemon() {
     this.loading.set(true);
@@ -56,99 +67,78 @@ export class RxjsComponent {
         this.loading.set(false);
       },
     });
-  }
+  }  
 
-  filterPokemonsByName(event: any) {
-    if (this.selectedFunction === 'switchMap') {
-      this.filterPokemonsByNameWithSwitch(event);
-    } else {
-      this.filterPokemonsByNameWithConcat(event);
-    }
-  }
-
-  // Méthode appelée à chaque saisie pour filtrer les Pokémon
-  filterPokemonsByNameWithSwitch(event: any) {
-    const query = event.query.toLowerCase();
-    of(query)
+  initAutocompleteSwitchMapObservable() {
+    this.autoCompleteSwitchMapControl.valueChanges
       .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((searchQuery) => {
-          this.addLog(`Requête lancée avec switchMap pour ${searchQuery}`, 'info');
-          const delays = [5000, 3000, 200, 100];
-          const delay = delays[searchQuery.length];
-          return this.pokemonApiService.getPokemonList(1500, delay).pipe(
-            map((data: any) => {
-              this.addLog(`Réponse reçue avec switchMap pour ${searchQuery}`, 'success');
-              return data.filter((pokemon: any) =>
-                pokemon.name.toLowerCase().startsWith(searchQuery)
-              );
-            })
-          );
-        })
+        filter((value: string | null): value is string => value !== null && value.length > 0),
+        //debounceTime(300),
+        //distinctUntilChanged(),    
+        tap(() => this.selectedOperator = 'switchMap'),    
+        switchMap((searchQuery: string) => this.filterPokemonList(searchQuery))
       )
       .subscribe((filteredResults: any[]) => {
         this.filteredPokemons.set(filteredResults);
       });
   }
 
-  /*filterPokemonsByNameWithSwitch(event: any) {
-    const query = event.query.toLowerCase();
-    this.pokemonApiService.getPokemonList(1500).pipe(
-      debounceTime(300), 
-      distinctUntilChanged(),
-      switchMap((data: Pokemon[] | any) => {
-        return of(data.results.filter((pokemon: any) => 
-          pokemon.name.toLowerCase().startsWith(query)
-        ));
-      })
-    ).subscribe((filteredResults: any) => {
-      console.log('Avec switchMap')
-      this.filteredPokemons.set(filteredResults)
-    });
-  }*/
+  initAutocompleteConcatMapObservable() {
+    this.autoCompleteConcatMapControl.valueChanges
+      .pipe(
+        filter((value: string | null): value is string => value !== null && value.length > 0),
+        //debounceTime(300),
+        //distinctUntilChanged(),        
+        tap(() => this.selectedOperator = 'concatMap'),
+        concatMap((searchQuery: string) => this.filterPokemonList(searchQuery))
+      )
+      .subscribe((filteredResults: any[]) => {
+        this.filteredPokemons.set(filteredResults);
+      });
+  }
 
-  /*filterPokemonsByNameWithMerge(event: any) {
-    const query = event.query.toLowerCase();
+  initAutocompleteMergeMapObservable() {
+    this.autoCompleteMergeMapControl.valueChanges
+      .pipe(
+        filter((value: string | null): value is string => value !== null && value.length > 0),
+        //debounceTime(300),
+        //distinctUntilChanged(),  
+        tap(() => this.selectedOperator = 'mergeMap'),       
+        mergeMap((searchQuery: string) => this.filterPokemonList(searchQuery))
+      )
+      .subscribe((filteredResults: any[]) => {
+        this.filteredPokemons.set(filteredResults);
+      });
+  }
+
+  initAutocompleteExhaustMapObservable() {
+    this.autoCompleteExhaustMapControl.valueChanges
+      .pipe(
+        filter((value: string | null): value is string => value !== null && value.length > 0),
+        
+        //debounceTime(300),
+        //distinctUntilChanged(),    
+        tap(() => this.selectedOperator = 'exhaustMap'),    
+        exhaustMap((searchQuery: string) => this.filterPokemonList(searchQuery))
+      )
+      .subscribe((filteredResults: any[]) => {
+        this.filteredPokemons.set(filteredResults);
+      });
+  }
+
+  filterPokemonList(searchQuery: string) {
+    this.addLog(`Requête lancée avec ${this.selectedOperator} pour ${searchQuery}`, 'info');
+    /*const delays = [5000, 3000, 200, 100];
+    const delay = delays[searchQuery.length] || 100;  // Choisir un délai basé sur la longueur*/
     
-    this.pokemonApiService.getPokemonList(1500).pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      mergeMap((data: any) => { // Utilisation de concatMap
-        return of(data.results.filter((pokemon: any) => 
-          pokemon.name.toLowerCase().startsWith(query)
-        ));
+    return this.pokemonApiService.getPokemonList(1500, 100).pipe(
+      map((data: any) => {
+        this.addLog(`Réponse reçue avec ${this.selectedOperator} pour ${searchQuery}`, 'success');
+        return data.filter((pokemon: any) =>
+          pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+        );
       })
-    ).subscribe((filteredResults: any) => {
-      console.log('Avec concatMap');
-      this.filteredPokemons.set(filteredResults);
-    });
-  }*/
-
-  // Méthode appelée à chaque saisie pour filtrer les Pokémon
-  filterPokemonsByNameWithConcat(event: any) {
-    const query = event.query.toLowerCase();    
-    of(query)
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        concatMap((searchQuery) => {
-          this.addLog(`Requête lancée avec concatMap pour ${searchQuery}`, 'info');
-          const delays = [5000, 2000, 200];
-          const delay = delays[searchQuery.length];
-          return this.pokemonApiService.getPokemonList(1500, delay).pipe(
-            map((data: any) => {
-              this.addLog(`Réponse reçue avec concatMap pour ${searchQuery}`, 'success');
-              return data.filter((pokemon: any) =>
-                pokemon.name.toLowerCase().startsWith(searchQuery)
-              );
-            })
-          );
-        })
-      )
-      .subscribe((filteredResults: any[]) => {
-        this.filteredPokemons.set(filteredResults);
-      });
+    );
   }
 
   onPokemonSelect(event: any) {
@@ -159,7 +149,7 @@ export class RxjsComponent {
 
   clearAll() {
     this.clearLogs();
-    this.autoCompletePokemonControl.reset();
+    this.autoCompleteSwitchMapControl.reset();
   }
 
   clearLogs() {

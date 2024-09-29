@@ -18,3 +18,7 @@
 .custom-card:hover {
     box-shadow: 0 4px 20px rgba(255, 255, 255, 0.6); /* Effet de brillance autour de la card */
 }
+
+.p-card-content {
+    padding: 0;
+}

@@ -1,40 +1,48 @@
 <div class="grid">
   <div class="col-6">    
-    <p-card styleClass="w-full mt-3 mb-3">
-      <div class="p-field-radiobutton">
-        <div class="flex justify-content-between">
-          <!-- RadioButton pour switchMap -->
-          <p-radioButton 
-            class="mr-3"
-            name="functionType" 
-            value="switchMap" 
-            [(ngModel)]="selectedFunction" 
-            (ngModelChange)="clearAll()"
-            label="switchMap">
-          </p-radioButton>
 
-            <!-- RadioButton pour mergeMap -->
-          <p-radioButton 
-            name="functionType" 
-            value="mergeMap" 
-            [(ngModel)]="selectedFunction" 
-            (ngModelChange)="clearAll()"
-            label="concatMap">
-          </p-radioButton>
-        </div> 
-      </div>   
-    </p-card>       
+          <p-autoComplete
+            styleClass="w-full mt-3"
+            [formControl]="autoCompleteSwitchMapControl"
+            [dropdown]="true"
+            [showClear]="true"
+            [suggestions]="filteredPokemons()"
+            (onSelect)="onPokemonSelect($event)"
+            placeholder="SwitchMap"
+            optionLabel="name" />
+
+          <p-autoComplete
+            styleClass="w-full mt-3"
+            [formControl]="autoCompleteConcatMapControl"
+            [dropdown]="true"
+            [showClear]="true"
+            [suggestions]="filteredPokemons()"
+            (onSelect)="onPokemonSelect($event)"
+            placeholder="ConcatMap"
+            optionLabel="name" />  
+
+          <p-autoComplete
+            styleClass="w-full mt-3"
+            [formControl]="autoCompleteMergeMapControl"
+            [dropdown]="true"
+            [showClear]="true"
+            [suggestions]="filteredPokemons()"
+            (onSelect)="onPokemonSelect($event)"
+            placeholder="MergeMap"
+            optionLabel="name" />
+
+            <p-autoComplete
+            styleClass="w-full mt-3"
+            [formControl]="autoCompleteExhaustMapControl"
+            [dropdown]="true"
+            [showClear]="true"
+            [suggestions]="filteredPokemons()"
+            (onSelect)="onPokemonSelect($event)"
+            placeholder="ExhaustMap"
+            optionLabel="name" />
   
-    <p-autoComplete
-      styleClass="w-full"
-      [formControl]="autoCompletePokemonControl"
-      [dropdown]="true"
-      [showClear]="true"
-      [suggestions]="filteredPokemons()"
-      (completeMethod)="filterPokemonsByName($event)"
-      (onSelect)="onPokemonSelect($event)"
-      optionLabel="name" />
-
+    
+      
     <p-card styleClass="w-full mb-3 mt-3">  
       @if (selectedPokemon()) {
         <h1 class="text-700 text-center">{{ selectedPokemon()?.name }}</h1>

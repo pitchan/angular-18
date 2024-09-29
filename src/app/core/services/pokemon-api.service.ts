@@ -27,7 +27,7 @@ export class PokemonApiService {
     return this.http.get(`${this.apiUrl}?limit=${limit}`).pipe(
       //delay(Math.floor(Math.random() * (3000 - 100 + 1)) + 100),
       delay(customDelay),
-      map((data: any) => mapPokemonList(data))
+      map((data: any) => mapPokemonList(data || []))
     );
   }
 }
