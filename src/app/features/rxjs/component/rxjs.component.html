@@ -1,45 +1,53 @@
 <div class="grid">
-  <div class="col-6">    
+  <div class="col-6"> 
+    <p-card styleClass="w-full mt-3">
+      <p-checkbox 
+      [(ngModel)]="isDelay"
+      label="Set delay to list request"  
+      [binary]="true" 
+      inputId="delay" />
+    </p-card>    
 
-          <p-autoComplete
-            styleClass="w-full mt-3"
-            [formControl]="autoCompleteSwitchMapControl"
-            [dropdown]="true"
-            [showClear]="true"
-            [suggestions]="filteredPokemons()"
-            (onSelect)="onPokemonSelect($event)"
-            placeholder="SwitchMap"
-            optionLabel="name" />
+    @let filteredPokemons = filteredPokemons$ | async;
+    <p-autoComplete
+      styleClass="w-full mt-3"
+      [formControl]="autoCompleteSwitchMapControl"
+      [dropdown]="true"
+      [showClear]="true"
+      [suggestions]="filteredPokemons"
+      (onSelect)="onPokemonSelect($event)"
+      placeholder="SwitchMap"
+      optionLabel="name" />
 
-          <p-autoComplete
-            styleClass="w-full mt-3"
-            [formControl]="autoCompleteConcatMapControl"
-            [dropdown]="true"
-            [showClear]="true"
-            [suggestions]="filteredPokemons()"
-            (onSelect)="onPokemonSelect($event)"
-            placeholder="ConcatMap"
-            optionLabel="name" />  
+    <p-autoComplete
+      styleClass="w-full mt-3"
+      [formControl]="autoCompleteConcatMapControl"
+      [dropdown]="true"
+      [showClear]="true"
+      [suggestions]="filteredPokemons"
+      (onSelect)="onPokemonSelect($event)"
+      placeholder="ConcatMap"
+      optionLabel="name" />  
 
-          <p-autoComplete
-            styleClass="w-full mt-3"
-            [formControl]="autoCompleteMergeMapControl"
-            [dropdown]="true"
-            [showClear]="true"
-            [suggestions]="filteredPokemons()"
-            (onSelect)="onPokemonSelect($event)"
-            placeholder="MergeMap"
-            optionLabel="name" />
+    <p-autoComplete
+      styleClass="w-full mt-3"
+      [formControl]="autoCompleteMergeMapControl"
+      [dropdown]="true"
+      [showClear]="true"
+      [suggestions]="filteredPokemons"
+      (onSelect)="onPokemonSelect($event)"
+      placeholder="MergeMap"
+      optionLabel="name" />
 
-            <p-autoComplete
-            styleClass="w-full mt-3"
-            [formControl]="autoCompleteExhaustMapControl"
-            [dropdown]="true"
-            [showClear]="true"
-            [suggestions]="filteredPokemons()"
-            (onSelect)="onPokemonSelect($event)"
-            placeholder="ExhaustMap"
-            optionLabel="name" />
+      <p-autoComplete
+      styleClass="w-full mt-3"
+      [formControl]="autoCompleteExhaustMapControl"
+      [dropdown]="true"
+      [showClear]="true"
+      [suggestions]="filteredPokemons"
+      (onSelect)="onPokemonSelect($event)"
+      placeholder="ExhaustMap"
+      optionLabel="name" />
   
     
       
