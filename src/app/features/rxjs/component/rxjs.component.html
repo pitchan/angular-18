@@ -75,24 +75,4 @@
     
     
   </div>
-
-  
-
-  
-
-
-  @if(loading()) {
-    <div>Chargement...</div>
-  } 
-
-  @if(error()) {
-    <div>{{ error() }}</div>
-  } 
-
-
-
-  @if(pokemon()) {
-    <h2>{{ pokemon()?.name | titlecase }} (ID: {{ pokemon()?.id }})</h2> 
-    <img [src]="pokemon()?.sprites?.picture" alt="{{ pokemon()?.name }}" />   
-  }
 <div>

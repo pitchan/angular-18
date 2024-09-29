@@ -31,7 +31,6 @@ export class RxjsComponent {
   loading = signal<boolean>(false);
   logMessages = signal<{message: string, type: 'info' | 'success'}[]>([]);
 
-  pokemon = signal<Pokemon | null>(null);
   selectedPokemon = signal<Pokemon | null>(null);  // Signal pour le Pokémon sélectionné
   filteredPokemons = signal<Pokemon[]>([]);        // Signal pour la liste des Pokémon filtrés
   error = signal<string>('');
@@ -49,7 +48,7 @@ export class RxjsComponent {
     this.pokemonApiService.getPokemon(randomId.toString()).subscribe({
       next: (data) => {
         console.log(data);
-        this.pokemon.set(data);
+        this.selectedPokemon.set(data);
         this.loading.set(false);
       },
       error: (err) => {
