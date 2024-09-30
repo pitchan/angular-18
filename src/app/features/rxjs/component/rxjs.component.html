@@ -8,13 +8,12 @@
       inputId="delay" />
     </p-card>    
 
-    @let filteredPokemons = filteredPokemons$ | async;
     <p-autoComplete
       styleClass="w-full mt-3"
       [formControl]="autoCompleteSwitchMapControl"
       [dropdown]="true"
       [showClear]="true"
-      [suggestions]="filteredPokemons"
+      [suggestions]="filteredPokemonsSwitchMap$ | async"
       (onSelect)="onPokemonSelect($event)"
       placeholder="SwitchMap"
       optionLabel="name" />
@@ -24,7 +23,7 @@
       [formControl]="autoCompleteConcatMapControl"
       [dropdown]="true"
       [showClear]="true"
-      [suggestions]="filteredPokemons"
+      [suggestions]="filteredPokemonsConcatMap$ | async"
       (onSelect)="onPokemonSelect($event)"
       placeholder="ConcatMap"
       optionLabel="name" />  
@@ -34,17 +33,17 @@
       [formControl]="autoCompleteMergeMapControl"
       [dropdown]="true"
       [showClear]="true"
-      [suggestions]="filteredPokemons"
+      [suggestions]="filteredPokemonsMergeMap$ | async"
       (onSelect)="onPokemonSelect($event)"
       placeholder="MergeMap"
       optionLabel="name" />
 
-      <p-autoComplete
+    <p-autoComplete
       styleClass="w-full mt-3"
       [formControl]="autoCompleteExhaustMapControl"
       [dropdown]="true"
       [showClear]="true"
-      [suggestions]="filteredPokemons"
+      [suggestions]="filteredPokemonsExhaustMap$ | async"
       (onSelect)="onPokemonSelect($event)"
       placeholder="ExhaustMap"
       optionLabel="name" />
