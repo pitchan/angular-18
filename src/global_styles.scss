@@ -1,12 +1,23 @@
 /* Add application styles & imports to this file! */
-@import "primeng/resources/themes/lara-light-blue/theme.css";
-@import "primeng/resources/primeng.css";
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
-.custom-card-info {
-    padding: 2rem !important;
-    background: var(--primary-color);
-    color: #fff;
+@tailwind utilities;
+
+.home-header {
+    .custom-card-info {
+        padding: 2rem;
+        background-color: rgb(197, 138, 27);
+        color: #fff;
+    }
 }
+
+#rxjsPage {
+    .mat-mdc-button>.mat-icon {
+        margin-right: 0;
+    }
+}
+
+
 
 .custom-card {
     cursor: pointer;

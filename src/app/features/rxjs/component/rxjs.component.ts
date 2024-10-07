@@ -3,24 +3,28 @@ import { Component, OnInit, inject, signal, WritableSignal } from '@angular/core
 import { PokemonApiService } from '../../../core/services/pokemon-api.service';
 import { Pokemon } from '../../../core/model/pokemon.model';
 
-import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
-import { CardModule } from 'primeng/card';
-import { ImageModule } from 'primeng/image';
-import { CheckboxModule } from 'primeng/checkbox';
-
-import { DividerModule } from 'primeng/divider';
 import { RxjsService } from '../services/rxjs.service';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { catchError, concatMap, debounceTime, distinctUntilChanged, exhaustMap, filter, map, mergeMap, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { EMPTY, merge, of } from 'rxjs';
 
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { PokemonAutoCompleteComponent } from '../../../shared/components/pokemon-auto-complete/pokemon-autocomplete.component';
+
+
 @Component({
   selector: 'app-rxjs',
   standalone: true,
-  imports: [CommonModule, AutoCompleteModule, ReactiveFormsModule, CheckboxModule, FormsModule, TagModule, ButtonModule, CardModule, DividerModule, ImageModule],
+  imports: [CommonModule, PokemonAutoCompleteComponent, ReactiveFormsModule, MatCheckboxModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule, MatCardModule, MatCardModule, MatButtonModule, MatCardModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, MatChipsModule],
   templateUrl: './rxjs.component.html',
 })
 export class RxjsComponent {
@@ -52,8 +56,7 @@ export class RxjsComponent {
 
   initAutocompleteSwitchMapObservable() {
     return this.autoCompleteSwitchMapControl.valueChanges
-      .pipe(
-        takeUntilDestroyed(),
+      .pipe(        
         filter((value: string | null): value is string => value !== null && value.length > 0),
         //debounceTime(300),
         //distinctUntilChanged(),    
@@ -62,14 +65,13 @@ export class RxjsComponent {
         catchError((error) => {
           console.log('initAutocompleteSwitchMapObservable: ', error);
           return of(error);
-        })
+        }),        
       )
   }
 
   initAutocompleteConcatMapObservable() {
     return this.autoCompleteConcatMapControl.valueChanges
       .pipe(
-        takeUntilDestroyed(),
         filter((value: string | null): value is string => value !== null && value.length > 0),
         //debounceTime(300),
         //distinctUntilChanged(),        
@@ -85,7 +87,6 @@ export class RxjsComponent {
   initAutocompleteMergeMapObservable() {
     return this.autoCompleteMergeMapControl.valueChanges
       .pipe(
-        takeUntilDestroyed(),
         filter((value: string | null): value is string => value !== null && value.length > 0),
         //debounceTime(300),
         //distinctUntilChanged(),  
@@ -101,7 +102,6 @@ export class RxjsComponent {
   initAutocompleteExhaustMapObservable() {
     return this.autoCompleteExhaustMapControl.valueChanges
       .pipe(
-        takeUntilDestroyed(),
         filter((value: string | null): value is string => value !== null && value.length > 0),        
         //debounceTime(300),
         //distinctUntilChanged(),    
@@ -137,9 +137,13 @@ export class RxjsComponent {
     );
   }
 
+  openPreview(imageUrl: string | undefined) {
+    return;
+  }
+
   onPokemonSelect(event: any) {
-    if (event?.value?.name) {
-      this.selectedPokemon.set(event.value);
+    if (event?.source?.value?.sprites?.picture) {
+      this.selectedPokemon.set(event.source.value);
     }    
   }
 

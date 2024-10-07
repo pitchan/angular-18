@@ -1,0 +1,14 @@
+<mat-form-field class="w-full">
+    <mat-label>{{ label() }}</mat-label>
+    <input type="text"
+            placeholder="Pick one"
+            aria-label="concatMapPokemon"
+            matInput
+            [formControl]="control()"
+            [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPokemon">
+        @for (pokemon of pokemonList(); track pokemon.id) {
+            <mat-option [value]="pokemon">{{pokemon.name}}</mat-option>
+        }
+    </mat-autocomplete>
+</mat-form-field>

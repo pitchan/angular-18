@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { StyleClassModule } from 'primeng/styleclass';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ButtonModule, CardModule, StyleClassModule],
+  imports: [MatCardModule, MatButtonModule],
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
