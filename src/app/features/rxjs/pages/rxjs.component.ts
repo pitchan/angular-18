@@ -18,7 +18,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { PokemonAutoCompleteComponent } from '../../../shared/components/pokemon-auto-complete/pokemon-autocomplete.component';
+import { PokemonAutoCompleteComponent } from './components/pokemon-autocomplete.component'; 
 
 
 @Component({
