@@ -51,37 +51,6 @@
     
   </div>
   <div class="w-3/6">
-    <!-- Affichage des logs -->
-    <mat-card class="my-3">
-      <div class="flex">
-        <div class="flex items-center h-12">
-          <button mat-button color="warn" [disabled]="logMessages().length === 0" (click)="clearLogs()">
-            <mat-icon >delete</mat-icon>
-          </button>
-        </div> 
-        <mat-divider vertical></mat-divider>
-        <div class="ml-3 content-center">
-          <div class="text-gray-700 text-2xl font-bold">Request Logs</div>
-        </div>
-      </div>
-    
-      <mat-divider></mat-divider>
-    
-      @if (logMessages().length > 0) {
-        <div class="m-4 max-h-96 overflow-auto">
-          @for (log of logMessages(); track log) {
-            <div class="m-1">
-              <mat-chip color="primary">
-                {{ log.message }}
-              </mat-chip>
-            </div>
-          }     
-        </div>   
-      } @else {
-        <div>
-          <h1 class="text-gray-400 text-center">No logs</h1>
-        </div>
-      }      
-    </mat-card>
+    <app-request-logs [logMessages]="logMessages()"></app-request-logs>    
   </div>
 <div>

@@ -19,12 +19,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { PokemonAutoCompleteComponent } from '../components/pokemon-autocomplete.component'; 
+import { RequestLogsComponent } from '../components/request-logs/request-logs.component';
 
 
 @Component({
   selector: 'app-using-pipes',
   standalone: true,
-  imports: [CommonModule, PokemonAutoCompleteComponent, ReactiveFormsModule, MatCheckboxModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule, MatCardModule, MatCardModule, MatButtonModule, MatCardModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, MatChipsModule],
+  imports: [CommonModule, PokemonAutoCompleteComponent, ReactiveFormsModule, MatCheckboxModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule, MatCardModule, MatCardModule, MatButtonModule, MatCardModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, MatChipsModule, RequestLogsComponent],
   templateUrl: './using-pipes.component.html',
 })
 export class UsingPipesComponent {
