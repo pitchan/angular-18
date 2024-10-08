@@ -17,8 +17,8 @@ export const routes: Routes = [
   {
     path: 'rxjs',
     loadComponent: () =>
-      import('./features/rxjs/pages/rxjs.component').then(
-        (c) => c.RxjsComponent
+      import('./features/rxjs/pages/using-pipes/using-pipes.component').then(
+        (c) => c.UsingPipesComponent
       ),
   },
   // Vous pouvez ajouter d'autres routes ici

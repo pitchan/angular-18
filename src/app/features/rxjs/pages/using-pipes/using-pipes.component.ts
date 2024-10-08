@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal, WritableSignal } from '@angular/core';
-import { PokemonApiService } from '../../../core/services/pokemon-api.service';
-import { Pokemon } from '../../../core/model/pokemon.model';
+import { PokemonApiService } from '../../../../core/services/pokemon-api.service';
+import { Pokemon } from '../../../../core/model/pokemon.model';
 
-import { RxjsService } from '../services/rxjs.service';
+import { RxjsService } from '../../services/rxjs.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { catchError, concatMap, debounceTime, distinctUntilChanged, exhaustMap, filter, map, mergeMap, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -18,16 +18,16 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { PokemonAutoCompleteComponent } from './components/pokemon-autocomplete.component'; 
+import { PokemonAutoCompleteComponent } from '../components/pokemon-autocomplete.component'; 
 
 
 @Component({
-  selector: 'app-rxjs',
+  selector: 'app-using-pipes',
   standalone: true,
   imports: [CommonModule, PokemonAutoCompleteComponent, ReactiveFormsModule, MatCheckboxModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule, MatCardModule, MatCardModule, MatButtonModule, MatCardModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, MatChipsModule],
-  templateUrl: './rxjs.component.html',
+  templateUrl: './using-pipes.component.html',
 })
-export class RxjsComponent {
+export class UsingPipesComponent {
   private readonly pokemonApiService = inject(PokemonApiService);
   private readonly rxjsService = inject(RxjsService);
 
@@ -50,16 +50,16 @@ export class RxjsComponent {
   selectedOperator = 'switchMap';
   operatorControl = new FormControl('switchMap'); // Valeur initiale
   
-
   constructor() {}
 
   initAutocompleteObservable(mapOperator: any, control: FormControl, operatorName: string): Observable<any> {
     return control.valueChanges.pipe(
-      filter((value: string | null): value is string => value !== null && value.length > 0),
+      filter((value: string | null): value is string => value !== null),
       //debounceTime(300),
       //distinctUntilChanged(),
       tap(() => this.selectedOperator = operatorName),
-      mapOperator((searchQuery: string) => this.filterPokemonList(searchQuery, operatorName)),
+      mapOperator((searchQuery: string) => searchQuery.length > 0 
+        ? this.filterPokemonList(searchQuery, operatorName) : of([])),
       catchError((error) => {
         console.log(`initAutocompleteObservable (${operatorName}): `, error);
         return of(error);
