@@ -1,4 +1,4 @@
-<mat-card class="my-3">
+<mat-card class="request-log-component my-3">
     <div class="flex">
       <div class="flex items-center h-12">
         <button mat-button color="warn" [disabled]="logMessages().length === 0" (click)="clearLogs()">
@@ -17,7 +17,7 @@
       <div class="m-4 max-h-96 overflow-auto">
         @for (log of logMessages(); track log) {
           <div class="m-1">
-            <mat-chip color="primary">
+            <mat-chip [class]="log.type === 'request' ? 'log-request': 'log-response'">
               {{ log.message }}
             </mat-chip>
           </div>

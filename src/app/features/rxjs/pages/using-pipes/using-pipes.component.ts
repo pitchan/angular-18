@@ -38,7 +38,7 @@ export class UsingPipesComponent {
   readonly autoCompleteExhaustMapControl = new FormControl();
   
   loading = signal<boolean>(false);
-  logMessages = signal<{message: string, type: 'info' | 'success'}[]>([]);
+  logMessages = signal<{message: string, type: 'request' | 'response'}[]>([]);
 
   selectedPokemon = signal<Pokemon | null>(null);  // Signal pour le Pokémon sélectionné
   isDelay = false;
@@ -69,7 +69,7 @@ export class UsingPipesComponent {
   } 
 
   filterPokemonList(searchQuery: string, operatorName: string) {
-    this.addLog(`Requête lancée avec ${this.selectedOperator} pour ${searchQuery}`, 'info');
+    this.addLog(`Requête lancée avec ${this.selectedOperator} pour ${searchQuery}`, 'request');
     
     let delay = 100;    
     if (this.isDelay) {
@@ -78,7 +78,7 @@ export class UsingPipesComponent {
     }    
     return this.pokemonApiService.getPokemonList(1500, delay).pipe(
       map((data: any) => {
-        this.addLog(`Réponse reçue avec ${this.selectedOperator} pour ${searchQuery}`, 'success');
+        this.addLog(`Réponse reçue avec ${this.selectedOperator} pour ${searchQuery}`, 'response');
         return data.filter((pokemon: any) =>
           pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
         );
@@ -110,7 +110,7 @@ export class UsingPipesComponent {
     this.logMessages.set([]);
   }
 
-  addLog(message: string, type: 'info' | 'success') {
+  addLog(message: string, type: 'request' | 'response') {
     const currentLogs = this.logMessages();
     this.logMessages.set([...currentLogs, { message, type }]);
   }

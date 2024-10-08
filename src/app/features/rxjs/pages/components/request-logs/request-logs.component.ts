@@ -15,10 +15,11 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [CommonModule, MatCheckboxModule, MatIconModule, MatDividerModule, MatCardModule, MatCardModule, MatCardModule, MatChipsModule, MatButtonModule],
   templateUrl: './request-logs.component.html',
+  styleUrls: ['./request-logs.component.scss']
 })
 export class RequestLogsComponent {
   
-  logMessages = model<{message: string, type: 'info' | 'success'}[]>([]);
+  logMessages = model.required<{message: string, type: 'request' | 'response'}[]>();
   
   constructor() {}
 

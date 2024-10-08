@@ -3,6 +3,10 @@
 
 @tailwind utilities;
 
+::ng-deep .mat-mdc-chip {
+    color: white;
+}
+
 .home-header {
     .custom-card-info {
         padding: 2rem;
