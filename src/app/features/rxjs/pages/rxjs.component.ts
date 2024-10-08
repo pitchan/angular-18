@@ -7,7 +7,7 @@ import { RxjsService } from '../services/rxjs.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { catchError, concatMap, debounceTime, distinctUntilChanged, exhaustMap, filter, map, mergeMap, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { EMPTY, merge, of } from 'rxjs';
+import { EMPTY, Observable, merge, of } from 'rxjs';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -42,77 +42,30 @@ export class RxjsComponent {
   selectedPokemon = signal<Pokemon | null>(null);  // Signal pour le Pokémon sélectionné
   isDelay = false;
   
-  filteredPokemonsSwitchMap$ = this.initAutocompleteSwitchMapObservable();
-  filteredPokemonsConcatMap$ = this.initAutocompleteConcatMapObservable();
-  filteredPokemonsMergeMap$ = this.initAutocompleteMergeMapObservable();
-  filteredPokemonsExhaustMap$ = this.initAutocompleteExhaustMapObservable();
+  filteredPokemonsSwitchMap$ = this.initAutocompleteObservable(switchMap, this.autoCompleteSwitchMapControl, 'switchMap');
+  filteredPokemonsConcatMap$ = this.initAutocompleteObservable(concatMap, this.autoCompleteConcatMapControl, 'concatMap');
+  filteredPokemonsMergeMap$ = this.initAutocompleteObservable(mergeMap, this.autoCompleteMergeMapControl, 'mergeMap');
+  filteredPokemonsExhaustMap$ = this.initAutocompleteObservable(exhaustMap, this.autoCompleteExhaustMapControl, 'exhaustMap');
 
   selectedOperator = 'switchMap';
   operatorControl = new FormControl('switchMap'); // Valeur initiale
   
 
   constructor() {}
- 
 
-  initAutocompleteSwitchMapObservable() {
-    return this.autoCompleteSwitchMapControl.valueChanges
-      .pipe(        
-        filter((value: string | null): value is string => value !== null && value.length > 0),
-        //debounceTime(300),
-        //distinctUntilChanged(),    
-        tap(() => this.selectedOperator = 'switchMap'),    
-        switchMap((searchQuery: string) => this.filterPokemonList(searchQuery, 'switchMap')),
-        catchError((error) => {
-          console.log('initAutocompleteSwitchMapObservable: ', error);
-          return of(error);
-        }),        
-      )
-  }
-
-  initAutocompleteConcatMapObservable() {
-    return this.autoCompleteConcatMapControl.valueChanges
-      .pipe(
-        filter((value: string | null): value is string => value !== null && value.length > 0),
-        //debounceTime(300),
-        //distinctUntilChanged(),        
-        tap(() => this.selectedOperator = 'concatMap'),
-        concatMap((searchQuery: string) => this.filterPokemonList(searchQuery, 'concatMap')),
-        catchError((error) => {
-          console.log('initAutocompleteConcatMapObservable: ', error);
-          return of(error);
-        })
-      )
-  }
-
-  initAutocompleteMergeMapObservable() {
-    return this.autoCompleteMergeMapControl.valueChanges
-      .pipe(
-        filter((value: string | null): value is string => value !== null && value.length > 0),
-        //debounceTime(300),
-        //distinctUntilChanged(),  
-        tap(() => this.selectedOperator = 'mergeMap'),       
-        mergeMap((searchQuery: string) => this.filterPokemonList(searchQuery, 'mergeMap')),
-        catchError((error) => {
-          console.log('initAutocompleteMergeMapObservable: ', error);
-          return of(error);
-        })
-      )
-  }
-
-  initAutocompleteExhaustMapObservable() {
-    return this.autoCompleteExhaustMapControl.valueChanges
-      .pipe(
-        filter((value: string | null): value is string => value !== null && value.length > 0),        
-        //debounceTime(300),
-        //distinctUntilChanged(),    
-        tap(() => this.selectedOperator = 'exhaustMap'),    
-        exhaustMap((searchQuery: string) => this.filterPokemonList(searchQuery, 'exhaustMap')),
-        catchError((error) => {
-          console.log('initAutocompleteExhaustMapObservable: ', error);
-          return of(error);
-        })        
-      )
-  }
+  initAutocompleteObservable(mapOperator: any, control: FormControl, operatorName: string): Observable<any> {
+    return control.valueChanges.pipe(
+      filter((value: string | null): value is string => value !== null && value.length > 0),
+      //debounceTime(300),
+      //distinctUntilChanged(),
+      tap(() => this.selectedOperator = operatorName),
+      mapOperator((searchQuery: string) => this.filterPokemonList(searchQuery, operatorName)),
+      catchError((error) => {
+        console.log(`initAutocompleteObservable (${operatorName}): `, error);
+        return of(error);
+      })
+    );
+  } 
 
   filterPokemonList(searchQuery: string, operatorName: string) {
     this.addLog(`Requête lancée avec ${this.selectedOperator} pour ${searchQuery}`, 'info');
