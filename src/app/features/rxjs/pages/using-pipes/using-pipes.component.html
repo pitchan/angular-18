@@ -1,5 +1,5 @@
-<div id="rxjsPage" class="flex ">
-  <div class="flex flex-col gap-4 w-3/6 pr-4"> 
+<div id="rxjsPage" class="grid grid-cols-2 ">
+  <div class="flex flex-col gap-4 pr-4"> 
     <mat-card class="w-full mt-3">
       <mat-checkbox 
         [(ngModel)]="isDelay" 
@@ -11,46 +11,39 @@
     <app-pokemon-autocomplete 
       [pokemonList]="filteredPokemonsSwitchMap$ | async" 
       [control]="autoCompleteSwitchMapControl"
+      [(selectedPokemon)]="selectedPokemon"
       label="switchMap">
     </app-pokemon-autocomplete>
 
     <app-pokemon-autocomplete 
       [pokemonList]="filteredPokemonsConcatMap$ | async" 
       [control]="autoCompleteConcatMapControl"
+      [(selectedPokemon)]="selectedPokemon"
       label="concatMap">
     </app-pokemon-autocomplete>
 
     <app-pokemon-autocomplete 
       [pokemonList]="filteredPokemonsMergeMap$ | async" 
       [control]="autoCompleteMergeMapControl"
+      [(selectedPokemon)]="selectedPokemon"
       label="mergeMap">
     </app-pokemon-autocomplete>
 
     <app-pokemon-autocomplete 
       [pokemonList]="filteredPokemonsExhaustMap$ | async" 
       [control]="autoCompleteExhaustMapControl"
+      [(selectedPokemon)]="selectedPokemon"
       label="exhaustMap">
-    </app-pokemon-autocomplete>
-      
-      
-    <mat-card>  
-      @if (selectedPokemon()) {
-        <h1 class="text-700 text-center">{{ selectedPokemon()?.name }}</h1>
-        <div class="overflow-hidden text-center">
-          <img 
-            [src]="selectedPokemon()?.sprites?.picture" 
-            alt="Pokemon Image" 
-            class="pokemon-image"
-            (click)="openPreview(selectedPokemon()?.sprites?.bigPicture)"
-          />
-        </div>
-      } @else {
-        <h1 class="text-700 text-center">Select Pokemon</h1>
-      }     
-    </mat-card>
-    
+    </app-pokemon-autocomplete>    
   </div>
-  <div class="w-3/6">
-    <app-request-logs [logMessages]="logMessages()"></app-request-logs>    
-  </div>
+  <div class="flex flex-col justify-between">
+    <app-request-logs [logMessages]="logMessages()"></app-request-logs>
+    <button color="primary" mat-raised-button class="mb-6 w-full">Random Pokemon</button>
+  </div>  
+  <div class="col-span-2">
+    <app-pokemon-show
+      [name]="selectedPokemon()?.name || ''"
+      [picture]="selectedPokemon()?.sprites?.bigPicture || ''">
+    </app-pokemon-show>
+  </div> 
 <div>

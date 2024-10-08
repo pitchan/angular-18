@@ -6,7 +6,10 @@
             matInput
             [formControl]="control()"
             [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayPokemon">
+    <mat-autocomplete 
+        #auto="matAutocomplete" 
+        [displayWith]="displayPokemon"
+        (optionSelected)="onPokemonSelect($event)">
         @for (pokemon of pokemonList(); track pokemon.id) {
             <mat-option [value]="pokemon">{{pokemon.name}}</mat-option>
         }

@@ -20,17 +20,37 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { PokemonAutoCompleteComponent } from '../components/pokemon-autocomplete.component'; 
 import { RequestLogsComponent } from '../components/request-logs/request-logs.component';
+import { PokemonShowComponent } from '../../../../shared/components/pokemon-show/pokemon-show.component';
 
 
 @Component({
   selector: 'app-using-pipes',
   standalone: true,
-  imports: [CommonModule, PokemonAutoCompleteComponent, ReactiveFormsModule, MatCheckboxModule, FormsModule, MatIconModule, MatDividerModule, MatButtonModule, MatCardModule, MatCardModule, MatButtonModule, MatCardModule, MatAutocompleteModule, MatInputModule, MatFormFieldModule, MatChipsModule, RequestLogsComponent],
+  imports: [
+    CommonModule, 
+    PokemonAutoCompleteComponent, 
+    ReactiveFormsModule, 
+    MatCheckboxModule, 
+    FormsModule, 
+    MatIconModule, 
+    MatDividerModule, 
+    MatButtonModule, 
+    MatCardModule, 
+    MatCardModule, 
+    MatButtonModule, 
+    MatCardModule, 
+    MatAutocompleteModule, 
+    MatInputModule, 
+    MatFormFieldModule, 
+    MatChipsModule, 
+    RequestLogsComponent,
+    PokemonShowComponent
+  ],
   templateUrl: './using-pipes.component.html',
 })
 export class UsingPipesComponent {
-  private readonly pokemonApiService = inject(PokemonApiService);
-  private readonly rxjsService = inject(RxjsService);
+  #pokemonApiService = inject(PokemonApiService);
+  #rxjsService = inject(RxjsService);
 
   readonly autoCompleteSwitchMapControl = new FormControl();
   readonly autoCompleteConcatMapControl = new FormControl();
@@ -76,7 +96,7 @@ export class UsingPipesComponent {
       const delays = [5000, 3000, 200, 100];
       delay = delays[searchQuery.length];  // Choisir un délai basé sur la longueur
     }    
-    return this.pokemonApiService.getPokemonList(1500, delay).pipe(
+    return this.#pokemonApiService.getPokemonList(1500, delay).pipe(
       map((data: any) => {
         this.addLog(`Réponse reçue avec ${this.selectedOperator} pour ${searchQuery}`, 'response');
         return data.filter((pokemon: any) =>
@@ -89,16 +109,6 @@ export class UsingPipesComponent {
         return of(error);
       })
     );
-  }
-
-  openPreview(imageUrl: string | undefined) {
-    return;
-  }
-
-  onPokemonSelect(event: any) {
-    if (event?.source?.value?.sprites?.picture) {
-      this.selectedPokemon.set(event.source.value);
-    }    
   }
 
   clearAll() {
