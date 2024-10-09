@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({
@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
   standalone: true,
   imports: [CommonModule, MatCardModule],
   templateUrl: './pokemon-show.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PokemonShowComponent {
   name = input.required<string>();

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 
 
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [CommonModule, MatCheckboxModule, MatIconModule, MatDividerModule, MatCardModule, MatCardModule, MatCardModule, MatChipsModule, MatButtonModule],
   templateUrl: './request-logs.component.html',
-  styleUrls: ['./request-logs.component.scss']
+  styleUrls: ['./request-logs.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RequestLogsComponent {
   

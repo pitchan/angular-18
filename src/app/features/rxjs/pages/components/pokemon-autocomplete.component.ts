@@ -1,4 +1,4 @@
-import { Component, input, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, model } from '@angular/core';
 import { Pokemon } from '../../../../core/model/pokemon.model'; 
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, MatFormFieldModule, ReactiveFormsModule, MatAutocompleteModule, MatInput],
   templateUrl: './pokemon-autocomplete.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PokemonAutoCompleteComponent {
   pokemonList = input.required<Pokemon[]>();

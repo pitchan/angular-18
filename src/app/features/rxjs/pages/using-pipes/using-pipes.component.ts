@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal, WritableSignal, computed, effect } from '@angular/core';
+import { Component, OnInit, inject, signal, WritableSignal, computed, effect, ChangeDetectionStrategy } from '@angular/core';
 import { PokemonApiService } from '../../../../core/services/pokemon-api.service';
 import { Pokemon } from '../../../../core/model/pokemon.model';
 
@@ -47,6 +47,7 @@ import { PokemonShowComponent } from '../../../../shared/components/pokemon-show
     PokemonShowComponent
   ],
   templateUrl: './using-pipes.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsingPipesComponent {
   #pokemonApiService = inject(PokemonApiService);
