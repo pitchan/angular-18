@@ -41,9 +41,10 @@
     <button color="primary" mat-raised-button class="mb-6 w-full" (click)="randomPokemonClick()">Random Pokemon</button>
   </div>  
   <div class="col-span-2">
+    @let pokemon = pokemonToShow | async;
     <app-pokemon-show
-      [name]="pokemonData().name || ''"
-      [picture]="pokemonData().picture || ''">
+      [name]="pokemon?.name || ''"
+      [picture]="pokemon?.sprites?.bigPicture || ''">
     </app-pokemon-show>
   </div> 
 <div>

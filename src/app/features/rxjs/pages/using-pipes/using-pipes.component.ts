@@ -6,7 +6,7 @@ import { Pokemon } from '../../../../core/model/pokemon.model';
 import { RxjsService } from '../../services/rxjs.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { catchError, concatMap, debounceTime, distinctUntilChanged, exhaustMap, filter, map, mergeMap, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -71,26 +71,14 @@ export class UsingPipesComponent {
   filteredPokemonsMergeMap$ = this.initAutocompleteObservable(mergeMap, this.autoCompleteMergeMapControl, 'mergeMap');
   filteredPokemonsExhaustMap$ = this.initAutocompleteObservable(exhaustMap, this.autoCompleteExhaustMapControl, 'exhaustMap');
 
-  randomPokemon = toSignal(this.getRandomPokemonObserver());
-
-  pokemonData = computed(() => {
-    const pokemon = this.selectedPokemon();
-    return {
-      name: pokemon?.name || '',  
-      picture: pokemon?.sprites?.bigPicture || '' 
-    };
-  });
+  pokemonToShow = merge(
+    toObservable(this.selectedPokemon),
+    this.getRandomPokemonObserver()
+  );
 
   selectedOperator = 'switchMap'; 
   
-  constructor() {
-    effect(() => {
-      const random = this.randomPokemon();
-      if (random) {
-        this.selectedPokemon.set(random);  // Ceci est sûr car effectué dans un effect
-      }
-    }, { allowSignalWrites: true });
-  }
+  constructor() {}
 
   initAutocompleteObservable(mapOperator: any, control: FormControl, operatorName: string): Observable<any> {
     return control.valueChanges.pipe(
@@ -147,7 +135,7 @@ export class UsingPipesComponent {
   }
 
   randomPokemonClick() {
-    this.#pokemonClick$.next(); // Émet un événement lorsqu'on clique
+    this.#pokemonClick$.next();
   }
 
   addLog(message: string, type: 'request' | 'response') {
