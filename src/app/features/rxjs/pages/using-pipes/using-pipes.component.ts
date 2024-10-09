@@ -75,12 +75,12 @@ export class UsingPipesComponent {
   pokemonData = computed(() => {
     const pokemon = this.selectedPokemon() || this.randomPokemon();
     return {
-      name: pokemon?.name,  
-      picture: pokemon?.sprites?.bigPicture 
+      name: pokemon?.name || '',  
+      picture: pokemon?.sprites?.bigPicture || '' 
     };
   });
 
-  selectedOperator = 'switchMap';
+  selectedOperator = 'switchMap'; 
   
   constructor() {}
 
