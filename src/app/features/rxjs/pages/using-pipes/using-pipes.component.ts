@@ -7,7 +7,7 @@ import { RxjsService } from '../../services/rxjs.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { catchError, concatMap, debounceTime, distinctUntilChanged, exhaustMap, filter, map, mergeMap, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { EMPTY, Observable, merge, of } from 'rxjs';
+import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -51,6 +51,8 @@ import { PokemonShowComponent } from '../../../../shared/components/pokemon-show
 export class UsingPipesComponent {
   #pokemonApiService = inject(PokemonApiService);
   #rxjsService = inject(RxjsService);
+
+  #pokemonClick$ = new Subject<void>();
 
   readonly autoCompleteSwitchMapControl = new FormControl();
   readonly autoCompleteConcatMapControl = new FormControl();
@@ -109,6 +111,19 @@ export class UsingPipesComponent {
         return of(error);
       })
     );
+  }
+
+  getRandomPokemon() {
+    return this.#pokemonClick$.pipe(
+      exhaustMap(() => {          
+          const randomId = Math.floor(Math.random() * 898) + 1;
+          return this.#pokemonApiService.getPokemonById(randomId);          
+        })
+      );
+  }
+
+  randomPokemonClick() {
+    this.#pokemonClick$.next(); // Émet un événement lorsqu'on clique
   }
 
   clearAll() {

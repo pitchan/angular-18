@@ -7,4 +7,6 @@ import { Pokemon } from '../../../core/model/pokemon.model';
 })
 export class RxjsService {
   constructor() {}
+
+  
 }
