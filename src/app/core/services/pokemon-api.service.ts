@@ -22,14 +22,16 @@ export class PokemonApiService {
     return this.http.get<Pokemon>(`${this.apiUrl}/${name.toLowerCase()}`);
   }
   
+  // Méthode pour récupérer un Pokémon par son id
   getPokemonById(id: number): Observable<Pokemon> {
-    return this.http.get<Pokemon>(`${this.apiUrl}/${id}`);
+    return this.http.get<Pokemon>(`${this.apiUrl}/${id}`).pipe(
+      map((data) => mapPokemonList({results: [data]} || null)[0])
+    );
   }
 
   // Récupérer la liste des Pokémon
   getPokemonList(limit: number, customDelay: number) {
     return this.http.get(`${this.apiUrl}?limit=${limit}`).pipe(
-      //delay(Math.floor(Math.random() * (3000 - 100 + 1)) + 100),
       delay(customDelay),
       map((data: any) => mapPokemonList(data || []))
     );

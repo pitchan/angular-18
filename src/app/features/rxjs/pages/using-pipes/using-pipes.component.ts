@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, inject, signal, WritableSignal, computed } from '@angular/core';
 import { PokemonApiService } from '../../../../core/services/pokemon-api.service';
 import { Pokemon } from '../../../../core/model/pokemon.model';
 
@@ -62,7 +62,7 @@ export class UsingPipesComponent {
   loading = signal<boolean>(false);
   logMessages = signal<{message: string, type: 'request' | 'response'}[]>([]);
 
-  selectedPokemon = signal<Pokemon | null>(null);  // Signal pour le Pokémon sélectionné
+  selectedPokemon = signal<Pokemon | null>(null);
   isDelay = false;
   
   filteredPokemonsSwitchMap$ = this.initAutocompleteObservable(switchMap, this.autoCompleteSwitchMapControl, 'switchMap');
@@ -70,8 +70,17 @@ export class UsingPipesComponent {
   filteredPokemonsMergeMap$ = this.initAutocompleteObservable(mergeMap, this.autoCompleteMergeMapControl, 'mergeMap');
   filteredPokemonsExhaustMap$ = this.initAutocompleteObservable(exhaustMap, this.autoCompleteExhaustMapControl, 'exhaustMap');
 
+  randomPokemon = toSignal(this.getRandomPokemonObserver());
+
+  pokemonData = computed(() => {
+    const pokemon = this.selectedPokemon() || this.randomPokemon();
+    return {
+      name: pokemon?.name,  
+      picture: pokemon?.sprites?.bigPicture 
+    };
+  });
+
   selectedOperator = 'switchMap';
-  operatorControl = new FormControl('switchMap'); // Valeur initiale
   
   constructor() {}
 
@@ -99,13 +108,12 @@ export class UsingPipesComponent {
       delay = delays[searchQuery.length];  // Choisir un délai basé sur la longueur
     }    
     return this.#pokemonApiService.getPokemonList(1500, delay).pipe(
-      map((data: any) => {
-        this.addLog(`Réponse reçue avec ${this.selectedOperator} pour ${searchQuery}`, 'response');
+      map((data: any) => {        
         return data.filter((pokemon: any) =>
           pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
         );
       }),
-      tap((list) => console.dir(list)),
+      tap(() => this.addLog(`Réponse reçue avec ${this.selectedOperator} pour ${searchQuery}`, 'response')),
       catchError((error) => {
         console.log('filterPokemonList', operatorName, error);
         return of(error);
@@ -113,30 +121,42 @@ export class UsingPipesComponent {
     );
   }
 
-  getRandomPokemon() {
+  getRandomPokemonObserver() {
     return this.#pokemonClick$.pipe(
+      tap(() => this.addLog('Requête lancée avec ExhaustMap', 'request')),
       exhaustMap(() => {          
           const randomId = Math.floor(Math.random() * 898) + 1;
           return this.#pokemonApiService.getPokemonById(randomId);          
-        })
-      );
+      }),
+      tap(() => {
+        this.addLog('Réponse reçue avec ExhaustMap', 'response');        
+      }),
+      catchError((error) => {
+        console.log('getRandomPokemonObserver', error);
+        return of(null);
+      })
+    );
   }
+
+  /*getRandomPokemonObserver() {
+    toSignal(this.#pokemonClick$.pipe(
+      tap(() => this.addLog('Requête lancée avec ExhaustMap', 'request')),
+      exhaustMap(() => {          
+          const randomId = Math.floor(Math.random() * 898) + 1;
+          return this.#pokemonApiService.getPokemonById(randomId);          
+      }),
+      tap((pokemon: Pokemon) => {
+        this.addLog('Réponse reçue avec ExhaustMap', 'response');
+        this.selectedPokemon.set(pokemon);
+      })
+    ));
+  }*/
 
   randomPokemonClick() {
     this.#pokemonClick$.next(); // Émet un événement lorsqu'on clique
   }
 
-  clearAll() {
-    this.clearLogs();
-    this.autoCompleteSwitchMapControl.reset();
-  }
-
-  clearLogs() {
-    this.logMessages.set([]);
-  }
-
   addLog(message: string, type: 'request' | 'response') {
-    const currentLogs = this.logMessages();
-    this.logMessages.set([...currentLogs, { message, type }]);
+    this.logMessages.update(currentLogs => [...currentLogs, { message, type }]);
   }
 }

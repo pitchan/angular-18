@@ -24,10 +24,6 @@ export class RequestLogsComponent {
   constructor() {}
 
 
-  clearAll() {
-    this.clearLogs();
-  }
-
   clearLogs() {
     this.logMessages.set([]);
   }

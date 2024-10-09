@@ -2,9 +2,10 @@ import { Pokemon } from "../model/pokemon.model";
 
 // Mapper pour transformer les objets retournés par l'API
 export function mapPokemonList(pokemonList: any): Pokemon[] {
+    
     return pokemonList.results.map((pokemon: any) => {
         // Extraire l'ID du Pokémon depuis l'URL (l'ID est à la fin de l'URL)
-        const id = extractPokemonId(pokemon.url);
+        const id = pokemon.url ? extractPokemonId(pokemon.url) : pokemon.id;
 
         // Construire l'URL de l'image
         const pictureUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
