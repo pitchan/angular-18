@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal, WritableSignal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, WritableSignal, computed, effect } from '@angular/core';
 import { PokemonApiService } from '../../../../core/services/pokemon-api.service';
 import { Pokemon } from '../../../../core/model/pokemon.model';
 
@@ -73,7 +73,7 @@ export class UsingPipesComponent {
   randomPokemon = toSignal(this.getRandomPokemonObserver());
 
   pokemonData = computed(() => {
-    const pokemon = this.selectedPokemon() || this.randomPokemon();
+    const pokemon = this.selectedPokemon();
     return {
       name: pokemon?.name || '',  
       picture: pokemon?.sprites?.bigPicture || '' 
@@ -82,7 +82,14 @@ export class UsingPipesComponent {
 
   selectedOperator = 'switchMap'; 
   
-  constructor() {}
+  constructor() {
+    effect(() => {
+      const random = this.randomPokemon();
+      if (random) {
+        this.selectedPokemon.set(random);  // Ceci est sûr car effectué dans un effect
+      }
+    }, { allowSignalWrites: true });
+  }
 
   initAutocompleteObservable(mapOperator: any, control: FormControl, operatorName: string): Observable<any> {
     return control.valueChanges.pipe(
@@ -137,20 +144,6 @@ export class UsingPipesComponent {
       })
     );
   }
-
-  /*getRandomPokemonObserver() {
-    toSignal(this.#pokemonClick$.pipe(
-      tap(() => this.addLog('Requête lancée avec ExhaustMap', 'request')),
-      exhaustMap(() => {          
-          const randomId = Math.floor(Math.random() * 898) + 1;
-          return this.#pokemonApiService.getPokemonById(randomId);          
-      }),
-      tap((pokemon: Pokemon) => {
-        this.addLog('Réponse reçue avec ExhaustMap', 'response');
-        this.selectedPokemon.set(pokemon);
-      })
-    ));
-  }*/
 
   randomPokemonClick() {
     this.#pokemonClick$.next(); // Émet un événement lorsqu'on clique
