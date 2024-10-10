@@ -5,11 +5,13 @@ import { Subject, catchError, interval, of, switchMap, take, takeUntil, tap } fr
 import { PokemonApiService } from '../../../../../core/services/pokemon-api.service';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { HighlightJsModule, HighlightJsDirective } from 'ngx-highlight-js';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-take-until',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [CommonModule, MatButtonModule, HighlightJsModule, HighlightJsDirective],  
   templateUrl: './take-until.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -20,6 +22,8 @@ export class TakeUntilComponent {
     #pokemonApiService = inject(PokemonApiService);
 
     #destroy$ = new Subject<void>();
+
+    code: string = `export class HelloWorld {sayHello(): string {return 'Hello, World!';}}`;
 
     /* Destroy not working */
     pokemonStream = this.completeWithTakeUntilDestroyedKO();    
@@ -54,7 +58,7 @@ export class TakeUntilComponent {
     }   
     
     startPokemonStream() {
-        this.pokemonStream.subscribe();
+        // this.pokemonStream.subscribe();
     }
 
 
@@ -93,7 +97,6 @@ export class TakeUntilComponent {
      */
     completeWithTakeUntilKO() {
         return this.#pokemonApiService.getPokemonById(82).pipe(    
-            //takeUntilDestroyed(), 
             takeUntil(this.#destroy$),           
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
@@ -108,7 +111,6 @@ export class TakeUntilComponent {
      */
     completeWithTakeUntilOK() {
         return this.#pokemonApiService.getPokemonById(82).pipe(    
-            //takeUntilDestroyed(),                        
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);
