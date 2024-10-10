@@ -15,10 +15,17 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'rxjs',
+    path: 'using-pipes',
     loadComponent: () =>
       import('./features/rxjs/pages/using-pipes/using-pipes.component').then(
         (c) => c.UsingPipesComponent
+      ),
+  },
+  {
+    path: 'memory-leak',
+    loadComponent: () =>
+      import('./features/rxjs/pages/memory-leak/memory-leak.component').then(
+        (c) => c.MemoryLeakComponent
       ),
   },
   // Vous pouvez ajouter d'autres routes ici

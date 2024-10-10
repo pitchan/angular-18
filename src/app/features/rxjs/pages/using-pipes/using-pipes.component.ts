@@ -3,7 +3,7 @@ import { Component, OnInit, inject, signal, WritableSignal, computed, effect, Ch
 import { PokemonApiService } from '../../../../core/services/pokemon-api.service';
 import { Pokemon } from '../../../../core/model/pokemon.model';
 
-import { RxjsService } from './services/rxjs.service';
+import { RxjsService } from '../../services/rxjs.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { catchError, concatMap, debounceTime, distinctUntilChanged, exhaustMap, filter, map, mergeMap, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
@@ -24,7 +24,6 @@ import { PokemonShowComponent } from '../../../../shared/components/pokemon-show
 
 
 @Component({
-  selector: 'app-using-pipes',
   standalone: true,
   imports: [
     CommonModule, 

@@ -1,0 +1,14 @@
+<div id="memoryLeakPage" class="grid grid-cols-2 ">
+    <mat-card>        
+        @if ( componentExist ) {
+            <app-take-until></app-take-until>
+        } @else {
+            <p>Component destroyed</p>
+        }
+        <button mat-raised-button color="primary">Destroy component</button>
+    </mat-card>
+    
+    <!--<app-log-panel [(logMessages)]="logMessages"></app-log-panel>-->
+    
+</div>
+
