@@ -66,21 +66,21 @@ export class UsingPipesComponent {
   selectedPokemon = signal<Pokemon | null>(null);
   isDelay = false;
   
-  filteredPokemonsSwitchMap$ = this.initAutocompleteObservable(switchMap, this.autoCompleteSwitchMapControl, 'switchMap');
-  filteredPokemonsConcatMap$ = this.initAutocompleteObservable(concatMap, this.autoCompleteConcatMapControl, 'concatMap');
-  filteredPokemonsMergeMap$ = this.initAutocompleteObservable(mergeMap, this.autoCompleteMergeMapControl, 'mergeMap');
-  filteredPokemonsExhaustMap$ = this.initAutocompleteObservable(exhaustMap, this.autoCompleteExhaustMapControl, 'exhaustMap');
+  filteredPokemonsSwitchMap$ = this.autocompleteSearch(switchMap, this.autoCompleteSwitchMapControl, 'switchMap');
+  filteredPokemonsConcatMap$ = this.autocompleteSearch(concatMap, this.autoCompleteConcatMapControl, 'concatMap');
+  filteredPokemonsMergeMap$ = this.autocompleteSearch(mergeMap, this.autoCompleteMergeMapControl, 'mergeMap');
+  filteredPokemonsExhaustMap$ = this.autocompleteSearch(exhaustMap, this.autoCompleteExhaustMapControl, 'exhaustMap');
 
   pokemonToShow = merge(
     toObservable(this.selectedPokemon),
-    this.getRandomPokemonObserver()
+    this.getRandomPokemon()
   );
 
   selectedOperator = 'switchMap'; 
   
   constructor() {}
 
-  initAutocompleteObservable(mapOperator: any, control: FormControl, operatorName: string): Observable<any> {
+  autocompleteSearch(mapOperator: any, control: FormControl, operatorName: string): Observable<any> {
     return control.valueChanges.pipe(
       filter((value: string | null): value is string => value !== null),
       //debounceTime(300),
@@ -117,7 +117,7 @@ export class UsingPipesComponent {
     );
   }
 
-  getRandomPokemonObserver() {
+  getRandomPokemon() {
     return this.#pokemonClick$.pipe(
       tap(() => this.addLog('Requête lancée avec ExhaustMap', 'request')),
       exhaustMap(() => {          
