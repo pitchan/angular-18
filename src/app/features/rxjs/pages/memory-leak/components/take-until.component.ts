@@ -5,13 +5,13 @@ import { Subject, catchError, interval, of, switchMap, take, takeUntil, tap } fr
 import { PokemonApiService } from '../../../../../core/services/pokemon-api.service';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { HighlightJsModule, HighlightJsDirective } from 'ngx-highlight-js';
+import { HighlightJsDirective } from 'ngx-highlight-js';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-take-until',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, HighlightJsModule, HighlightJsDirective],  
+  imports: [CommonModule, MatButtonModule, HighlightJsDirective],  
   templateUrl: './take-until.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
