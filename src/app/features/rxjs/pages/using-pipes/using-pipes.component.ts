@@ -81,8 +81,8 @@ export class UsingPipesComponent {
   autocompleteSearch(mapOperator: any, control: FormControl, operatorName: string): Observable<any> {
     return control.valueChanges.pipe(
       filter((value: string | null): value is string => value !== null),
-      //debounceTime(300),
-      //distinctUntilChanged(),
+      // debounceTime(300),
+      // distinctUntilChanged(),
       tap(() => this.selectedOperator = operatorName),
       mapOperator((searchQuery: string) => searchQuery.length > 0 
         ? this.filterPokemonList(searchQuery, operatorName) : of([])),
