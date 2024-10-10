@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
 
 
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
+import { RxjsService } from '../../../features/rxjs/services/rxjs.service';
 
 
 @Component({
@@ -20,12 +21,14 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class LogPanelComponent {
   
-  logMessages = model.required<{message: string, type: 'request' | 'response'}[]>();
-  
+  #rxjsService = inject(RxjsService);
+
+  logMessages = this.#rxjsService.logMessages;
+
   constructor() {}
 
 
   clearLogs() {
-    this.logMessages.set([]);
+    this.#rxjsService.logMessages.set([]);
   }
 }

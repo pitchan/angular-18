@@ -59,8 +59,7 @@ export class UsingPipesComponent {
   readonly autoCompleteMergeMapControl = new FormControl();
   readonly autoCompleteExhaustMapControl = new FormControl();
   
-  loading = signal<boolean>(false);
-  logMessages = signal<{message: string, type: 'request' | 'response'}[]>([]);
+  loading = signal<boolean>(false);  
 
   selectedPokemon = signal<Pokemon | null>(null);
   isDelay = false;
@@ -95,7 +94,7 @@ export class UsingPipesComponent {
   } 
 
   filterPokemonList(searchQuery: string, operatorName: string) {
-    this.addLog(`Requête lancée avec ${this.selectedOperator} pour ${searchQuery}`, 'request');
+    this.#rxjsService.addLog(`Requête lancée avec ${this.selectedOperator} pour ${searchQuery}`, 'request');
     
     let delay = 100;    
     if (this.isDelay) {
@@ -108,7 +107,7 @@ export class UsingPipesComponent {
           pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
         );
       }),
-      tap(() => this.addLog(`Réponse reçue avec ${this.selectedOperator} pour ${searchQuery}`, 'response')),
+      tap(() => this.#rxjsService.addLog(`Réponse reçue avec ${this.selectedOperator} pour ${searchQuery}`, 'response')),
       catchError((error) => {
         console.log('filterPokemonList', operatorName, error);
         return of(error);
@@ -118,13 +117,13 @@ export class UsingPipesComponent {
 
   getRandomPokemon(): Observable<Pokemon | null> {
     return this.#pokemonClick$.pipe(
-      tap(() => this.addLog('Requête lancée avec ExhaustMap', 'request')),
+      tap(() => this.#rxjsService.addLog('Requête lancée avec ExhaustMap', 'request')),
       exhaustMap(() => {          
           const randomId = Math.floor(Math.random() * 898) + 1;
           return this.#pokemonApiService.getPokemonById(randomId);          
       }),
       tap(() => {
-        this.addLog('Réponse reçue avec ExhaustMap', 'response');        
+        this.#rxjsService.addLog('Réponse reçue avec ExhaustMap', 'response');        
       }),
       catchError((error) => {
         console.log('getRandomPokemonObserver', error);
@@ -135,9 +134,5 @@ export class UsingPipesComponent {
 
   randomPokemonClick() {
     this.#pokemonClick$.next();
-  }
-
-  addLog(message: string, type: 'request' | 'response') {
-    this.logMessages.update(currentLogs => [...currentLogs, { message, type }]);
   }
 }
