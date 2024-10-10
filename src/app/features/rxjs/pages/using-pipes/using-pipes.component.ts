@@ -3,11 +3,11 @@ import { Component, OnInit, inject, signal, WritableSignal, computed, effect, Ch
 import { PokemonApiService } from '../../../../core/services/pokemon-api.service';
 import { Pokemon } from '../../../../core/model/pokemon.model';
 
-import { RxjsService } from '../../services/rxjs.service';
+import { RxjsService } from './services/rxjs.service';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { catchError, concatMap, debounceTime, distinctUntilChanged, exhaustMap, filter, map, mergeMap, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { EMPTY, Observable, Subject, merge, of } from 'rxjs';
+import { EMPTY, Observable, OperatorFunction, Subject, merge, of } from 'rxjs';
 
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,7 +18,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { PokemonAutoCompleteComponent } from '../components/pokemon-autocomplete.component'; 
+import { PokemonAutoCompleteComponent } from './components/pokemon-autocomplete.component'; 
 import { LogPanelComponent } from '../../../../shared/components/log-panel/log-panel.component';
 import { PokemonShowComponent } from '../../../../shared/components/pokemon-show/pokemon-show.component';
 
@@ -90,7 +90,7 @@ export class UsingPipesComponent {
         ? this.filterPokemonList(searchQuery, operatorName) : of([])),
       catchError((error) => {
         console.log(`initAutocompleteObservable (${operatorName}): `, error);
-        return of(error);
+        return of([]);
       })
     );
   } 
@@ -104,8 +104,8 @@ export class UsingPipesComponent {
       delay = delays[searchQuery.length];  // Choisir un délai basé sur la longueur
     }    
     return this.#pokemonApiService.getPokemonList(1500, delay).pipe(
-      map((data: any) => {        
-        return data.filter((pokemon: any) =>
+      map((data: Pokemon[]) => {        
+        return data.filter((pokemon: Pokemon) =>
           pokemon.name.toLowerCase().startsWith(searchQuery.toLowerCase())
         );
       }),
@@ -117,7 +117,7 @@ export class UsingPipesComponent {
     );
   }
 
-  getRandomPokemon() {
+  getRandomPokemon(): Observable<Pokemon | null> {
     return this.#pokemonClick$.pipe(
       tap(() => this.addLog('Requête lancée avec ExhaustMap', 'request')),
       exhaustMap(() => {          
