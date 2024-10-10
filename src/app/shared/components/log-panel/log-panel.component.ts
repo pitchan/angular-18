@@ -11,14 +11,14 @@ import { MatIconModule } from '@angular/material/icon';
 
 
 @Component({
-  selector: 'app-request-logs',
+  selector: 'app-log-panel',
   standalone: true,
   imports: [CommonModule, MatCheckboxModule, MatIconModule, MatDividerModule, MatCardModule, MatCardModule, MatCardModule, MatChipsModule, MatButtonModule],
-  templateUrl: './request-logs.component.html',
-  styleUrls: ['./request-logs.component.scss'],
+  templateUrl: './log-panel.component.html',
+  styleUrls: ['./log-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RequestLogsComponent {
+export class LogPanelComponent {
   
   logMessages = model.required<{message: string, type: 'request' | 'response'}[]>();
   

@@ -19,7 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { PokemonAutoCompleteComponent } from '../components/pokemon-autocomplete.component'; 
-import { RequestLogsComponent } from '../components/request-logs/request-logs.component';
+import { LogPanelComponent } from '../../../../shared/components/log-panel/log-panel.component';
 import { PokemonShowComponent } from '../../../../shared/components/pokemon-show/pokemon-show.component';
 
 
@@ -43,7 +43,7 @@ import { PokemonShowComponent } from '../../../../shared/components/pokemon-show
     MatInputModule, 
     MatFormFieldModule, 
     MatChipsModule, 
-    RequestLogsComponent,
+    LogPanelComponent,
     PokemonShowComponent
   ],
   templateUrl: './using-pipes.component.html',
