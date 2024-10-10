@@ -1,14 +1,20 @@
-<div id="memoryLeakPage" class="grid grid-cols-2 ">
-    <mat-card>        
+<div id="memoryLeakPage" class="grid grid-cols-2 gap-4">
+    <mat-card class="flex flex-col justify-between mt-4 p-4">        
         @if ( componentExist ) {
             <app-take-until></app-take-until>
         } @else {
-            <p>Component destroyed</p>
+            <p class="text-gray-400 text-2xl font-bold text-center">Component destroyed</p>
         }
-        <button mat-raised-button color="primary">Destroy component</button>
+        <button mat-raised-button color="primary" (click)="destroyComponent()">Destroy component</button>
     </mat-card>
     
-    <!--<app-log-panel [(logMessages)]="logMessages"></app-log-panel>-->
-    
+    <app-log-panel></app-log-panel>
+
+    <div class="col-span-2">
+        <app-pokemon-show
+          [name]="pokemon()?.name || ''"
+          [picture]="pokemon()?.sprites?.bigPicture || ''">
+        </app-pokemon-show>
+    </div> 
 </div>
 

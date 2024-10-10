@@ -1,12 +1,16 @@
-import { Injectable, signal } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable, inject, signal } from '@angular/core';
+import { Observable, Subject, catchError, interval, of, switchMap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Pokemon } from '../../../core/model/pokemon.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RxjsService {
 
+  #http = inject(HttpClient);
   logMessages = signal<{message: string, type: 'request' | 'response'}[]>([]);
+  currentPokemon = signal<Pokemon | null>(null);
 
   constructor() {}
 
