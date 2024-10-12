@@ -1,21 +1,34 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { Data } from '@angular/router';
 import { RxjsService } from '../../../services/rxjs.service';
-import { Subject, catchError, interval, of, switchMap, take, takeUntil, tap } from 'rxjs';
+import { EMPTY, Observable, Subject, Subscriber, Subscription, catchError, interval, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { PokemonApiService } from '../../../../../core/services/pokemon-api.service';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HighlightJsDirective } from 'ngx-highlight-js';
 import { CommonModule } from '@angular/common';
+import { MatRadioModule } from '@angular/material/radio';
+import { Pokemon } from '../../../../../core/model/pokemon.model';
+
+
+export enum CodeStatus {
+    CompleteWithTakeUntilDestroyedKO = 'CompleteWithTakeUntilDestroyedKO',
+    CompleteWithTakeUntilDestroyedOK = 'CompleteWithTakeUntilDestroyedOK',
+    CompleteWithTakeUntilKO = 'CompleteWithTakeUntilKO',
+    CompleteWithTakeUntilOK = 'CompleteWithTakeUntilOK',
+    CompleteWithTakeOneKO = 'CompleteWithTakeOneKO',
+    CompleteWithTakeOneOK = 'CompleteWithTakeOneOK',
+    CompleteWithUnsubscribeOneOK = 'CompleteWithUnsubscribeOneOK'
+}
 
 @Component({
-  selector: 'app-take-until',
+  selector: 'app-bad-destroy',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, HighlightJsDirective],  
-  templateUrl: './take-until.component.html',
+  imports: [CommonModule, MatButtonModule, HighlightJsDirective, MatRadioModule],  
+  templateUrl: './bad-destroy.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TakeUntilComponent {
+export class BadDestroyComponent {
     data: Data | null = null;
 
     #rxjsService = inject(RxjsService);
@@ -23,20 +36,15 @@ export class TakeUntilComponent {
 
     #destroy$ = new Subject<void>();
 
-    code: string = `export class HelloWorld {sayHello(): string {return 'Hello, World!';}}`;
+    #pokemonStream$: Observable<any> = EMPTY;;
+    #pokemonStreamSubscribed: Subscription | null = null;
 
-    /* Destroy not working */
-    pokemonStream = this.completeWithTakeUntilDestroyedKO();    
-    // pokemonStream = this.completeWithTakeUntilKO();
-    // pokemonStream = this.completeWithTakeOneKO();
+    runningCode: string = '';
+    codeStatus = CodeStatus;
 
-
-    /* Destroy working */
-    // pokemonStream = this.completeWithTakeUntilDestroyedOK();
-    // pokemonStream = this.completeWithTakeUntilOK();
-    // pokemonStream = this.completeWithTakeOneOK();
-    // pokemonStream = this.completeWithUnsubscribeOneOK()
-
+    selectedStatus = signal<CodeStatus | null>(this.codeStatus.CompleteWithTakeOneKO); // Variable pour stocker l'option sélectionnée
+    
+    
 
     // Certains operateurs doivent être placé aprés le takeUntilDestroy
     // last() : Emits the last value before completion
@@ -47,6 +55,59 @@ export class TakeUntilComponent {
     // max() : Emits the maximum value
     // min() : Emits the minimum value
     // ...
+
+    constructor() {
+        this.executeFunction();
+    }
+
+    executeFunction() {
+        const status = this.selectedStatus();
+        switch (status) {
+            case CodeStatus.CompleteWithTakeUntilDestroyedKO:
+                this.runningCode = status;
+                this.#pokemonStream$ = this.completeWithTakeUntilDestroyedKO();
+                break;
+            case CodeStatus.CompleteWithTakeUntilDestroyedOK:
+                this.runningCode = status;
+                this.#pokemonStream$ = this.completeWithTakeUntilDestroyedOK();
+                break;
+            case CodeStatus.CompleteWithTakeUntilKO:
+                this.runningCode = status;
+                this.#pokemonStream$ = this.completeWithTakeUntilKO();
+                break;
+            case CodeStatus.CompleteWithTakeUntilOK:
+                this.runningCode = status;
+                this.#pokemonStream$ = this.completeWithTakeUntilOK();
+                break;
+            case CodeStatus.CompleteWithTakeOneKO:
+                this.runningCode = status;
+                this.#pokemonStream$ = this.completeWithTakeOneKO();
+                break;
+            case CodeStatus.CompleteWithTakeOneOK:
+                this.runningCode = status;
+                this.#pokemonStream$ = this.completeWithUnsubscribeOneOK();
+                break; 
+            case CodeStatus.CompleteWithUnsubscribeOneOK:
+                this.runningCode = status;
+                this.#pokemonStream$ = this.completeWithUnsubscribeOneOK();
+                break; 
+            default : 
+                this.runningCode = CodeStatus.CompleteWithTakeOneKO;
+                this.#pokemonStream$ = this.completeWithTakeOneKO();
+                break;    
+        }
+    }
+
+    startFunction() {
+        if (this.#pokemonStream$) {
+            this.#pokemonStreamSubscribed?.unsubscribe();
+            this.#pokemonStreamSubscribed = this.#pokemonStream$.subscribe()
+        }
+    }
+
+    destroyFunction() {
+        this.#pokemonStreamSubscribed?.unsubscribe()
+    }
     
     getPokemonEveryTwoseconds() {
         return interval(2000).pipe(
@@ -55,10 +116,6 @@ export class TakeUntilComponent {
                 return this.#pokemonApiService.getPokemonById(randomId);
             })
         );
-    }   
-    
-    startPokemonStream() {
-        // this.pokemonStream.subscribe();
     }
 
 
@@ -159,12 +216,16 @@ export class TakeUntilComponent {
                 this.#rxjsService.currentPokemon.set(pokemon);
                 this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
             }),             
-        ).subscribe();
+        );
     }
+
+
 
     ngOnDestroy(): void {
         this.#destroy$.next();
         this.#destroy$.complete();
-        // this.pokemonStream.unsubscribe();
+        if (this.#pokemonStreamSubscribed && this.runningCode === this.codeStatus.CompleteWithUnsubscribeOneOK) {
+            this.#pokemonStreamSubscribed.unsubscribe();
+        }
     }
 }

@@ -1,20 +1,26 @@
-<div id="memoryLeakPage" class="grid grid-cols-2 gap-4">
-    <mat-card class="flex flex-col justify-between mt-4 p-4 h-80">        
+<div id="memoryLeakPage">
+    <mat-card class="flex flex-col h-auto justify-between mt-4 p-4 h-80">        
         @if ( componentExist ) {
-            <app-take-until></app-take-until>
+            <app-bad-destroy></app-bad-destroy>
         } @else {
             <p class="text-gray-400 text-2xl font-bold text-center">Component destroyed</p>
         }
-        <button mat-raised-button color="primary" (click)="destroyComponent()">Destroy component</button>
+        <div class="grid grid-cols-2 gap-3">
+            <button mat-raised-button color="primary" (click)="destroyComponent()">Destroy component</button>
+            <button mat-raised-button color="accent" (click)="reloadComponent()">Reload component</button>
+        </div>
     </mat-card>
-    
-    <app-log-panel></app-log-panel>
 
-    <div class="col-span-2">
+    <div class="grid grid-cols-2 gap-4 my-3">
         <app-pokemon-show
           [name]="pokemon()?.name || ''"
           [picture]="pokemon()?.sprites?.bigPicture || ''">
         </app-pokemon-show>
+
+        <app-log-panel ></app-log-panel>
     </div> 
+    
+    
 </div>
+
 
