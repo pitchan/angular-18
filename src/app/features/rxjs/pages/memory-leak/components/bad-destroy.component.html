@@ -1,5 +1,5 @@
 <div class="">
-    <p class="text-gray-400 text-2xl font-bold">Take until component</p>
+    <p class="text-gray-400 text-2xl font-bold">Bad destroy component</p>
     <mat-radio-group [value]="selectedStatus()" (change)="selectedStatus.set($event.value); executeFunction()">
         @for(status of codeStatus | keyvalue; track status) {
             <mat-radio-button [value]="status.value">
