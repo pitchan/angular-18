@@ -95,7 +95,7 @@
                         this.#rxjsService.currentPokemon.set(pokemon);
                         this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
                     }),             
-                    takeUntilDestroyed(),   
+                    takeUntil(this.#destroy$),   
                 );
             }
         </textarea>

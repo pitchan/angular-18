@@ -40,7 +40,7 @@ export class BadDestroyComponent {
     #pokemonStreamSubscribed: Subscription | null = null;
 
     codeStatus = CodeStatus;
-    selectedFunction = signal<CodeStatus | null>(this.codeStatus.CompleteWithTakeOneKO); // Variable pour stocker l'option sélectionnée
+    selectedFunction = signal<CodeStatus>(this.codeStatus.CompleteWithTakeOneKO); // Variable pour stocker l'option sélectionnée
     
     
 
@@ -55,16 +55,19 @@ export class BadDestroyComponent {
     // ...
 
     constructor() {
-        effect(() => {
+        const status = this.selectedFunction();
+        this.executeFunction(status);
+        /*effect(() => {
             const status = this.selectedFunction();
             if (status) {
                 this.executeFunction(status);
             }
-        });
+        });*/
     }
 
     selectFunction(event: any) {
         this.selectedFunction.set(event.value);
+        this.executeFunction(event.value);
     }
 
     executeFunction(status: string) {
@@ -85,7 +88,7 @@ export class BadDestroyComponent {
                 this.#pokemonStream$ = this.completeWithTakeOneKO();
                 break;
             case CodeStatus.CompleteWithTakeOneOK:
-                this.#pokemonStream$ = this.completeWithUnsubscribeOneOK();
+                this.#pokemonStream$ = this.completeWithTakeOneOK();
                 break; 
             case CodeStatus.CompleteWithUnsubscribeOneOK:
                 this.#pokemonStream$ = this.completeWithUnsubscribeOneOK();
@@ -200,7 +203,7 @@ export class BadDestroyComponent {
                 this.#rxjsService.currentPokemon.set(pokemon);
                 this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
             }),             
-            takeUntilDestroyed(),   
+            takeUntil(this.#destroy$),   
         );
     }
 
