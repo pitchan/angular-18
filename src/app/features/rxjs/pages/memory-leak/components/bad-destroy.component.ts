@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, effect, inject, signal } from '@angular/core';
 import { Data } from '@angular/router';
 import { RxjsService } from '../../../services/rxjs.service';
 import { EMPTY, Observable, Subject, Subscriber, Subscription, catchError, interval, of, switchMap, take, takeUntil, tap } from 'rxjs';
@@ -7,7 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HighlightJsDirective } from 'ngx-highlight-js';
 import { CommonModule } from '@angular/common';
-import { MatRadioModule } from '@angular/material/radio';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { Pokemon } from '../../../../../core/model/pokemon.model';
 
 
@@ -39,10 +39,8 @@ export class BadDestroyComponent {
     #pokemonStream$: Observable<any> = EMPTY;;
     #pokemonStreamSubscribed: Subscription | null = null;
 
-    runningCode: string = '';
     codeStatus = CodeStatus;
-
-    selectedStatus = signal<CodeStatus | null>(this.codeStatus.CompleteWithTakeOneKO); // Variable pour stocker l'option sélectionnée
+    selectedFunction = signal<CodeStatus | null>(this.codeStatus.CompleteWithTakeOneKO); // Variable pour stocker l'option sélectionnée
     
     
 
@@ -57,42 +55,42 @@ export class BadDestroyComponent {
     // ...
 
     constructor() {
-        this.executeFunction();
+        effect(() => {
+            const status = this.selectedFunction();
+            if (status) {
+                this.executeFunction(status);
+            }
+        });
     }
 
-    executeFunction() {
-        const status = this.selectedStatus();
+    selectFunction(event: any) {
+        this.selectedFunction.set(event.value);
+    }
+
+    executeFunction(status: string) {
         switch (status) {
             case CodeStatus.CompleteWithTakeUntilDestroyedKO:
-                this.runningCode = status;
                 this.#pokemonStream$ = this.completeWithTakeUntilDestroyedKO();
                 break;
             case CodeStatus.CompleteWithTakeUntilDestroyedOK:
-                this.runningCode = status;
                 this.#pokemonStream$ = this.completeWithTakeUntilDestroyedOK();
                 break;
             case CodeStatus.CompleteWithTakeUntilKO:
-                this.runningCode = status;
                 this.#pokemonStream$ = this.completeWithTakeUntilKO();
                 break;
             case CodeStatus.CompleteWithTakeUntilOK:
-                this.runningCode = status;
                 this.#pokemonStream$ = this.completeWithTakeUntilOK();
                 break;
             case CodeStatus.CompleteWithTakeOneKO:
-                this.runningCode = status;
                 this.#pokemonStream$ = this.completeWithTakeOneKO();
                 break;
             case CodeStatus.CompleteWithTakeOneOK:
-                this.runningCode = status;
                 this.#pokemonStream$ = this.completeWithUnsubscribeOneOK();
                 break; 
             case CodeStatus.CompleteWithUnsubscribeOneOK:
-                this.runningCode = status;
                 this.#pokemonStream$ = this.completeWithUnsubscribeOneOK();
                 break; 
             default : 
-                this.runningCode = CodeStatus.CompleteWithTakeOneKO;
                 this.#pokemonStream$ = this.completeWithTakeOneKO();
                 break;    
         }
@@ -224,7 +222,7 @@ export class BadDestroyComponent {
     ngOnDestroy(): void {
         this.#destroy$.next();
         this.#destroy$.complete();
-        if (this.#pokemonStreamSubscribed && this.runningCode === this.codeStatus.CompleteWithUnsubscribeOneOK) {
+        if (this.#pokemonStreamSubscribed && this.selectedFunction() === this.codeStatus.CompleteWithUnsubscribeOneOK) {
             this.#pokemonStreamSubscribed.unsubscribe();
         }
     }

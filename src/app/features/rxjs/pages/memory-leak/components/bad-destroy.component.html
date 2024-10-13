@@ -1,6 +1,6 @@
 <div class="">
     <p class="text-gray-400 text-2xl font-bold">Bad destroy component</p>
-    <mat-radio-group [value]="selectedStatus()" (change)="selectedStatus.set($event.value); executeFunction()">
+    <mat-radio-group [value]="selectedFunction()" (change)="selectFunction($event)">
         @for(status of codeStatus | keyvalue; track status) {
             <mat-radio-button [value]="status.value">
                 {{ status.value }}
@@ -11,10 +11,10 @@
 </div>
 <div class="grid grid-cols-2 gap-3">
     <button mat-raised-button color="primary" (click)="startFunction()">Start pokemon stream</button>
-    <button mat-raised-button color="accent" (click)="destroyFunction()">Stop pokemon stream</button>
+    <button mat-raised-button color="warn" (click)="destroyFunction()">Force stop pokemon stream</button>
 </div>
-<div> 
-@switch (runningCode) {
+<div>    
+@switch (selectedFunction()) {
     @case (codeStatus.CompleteWithTakeUntilDestroyedKO) {
         <textarea highlight-js lang="ts">
             completeWithTakeUntilDestroyedKO() {
