@@ -17,100 +17,115 @@
 @switch (selectedFunction()) {
     @case (codeStatus.CompleteWithTakeUntilDestroyedKO) {
         <textarea highlight-js lang="ts">
-            completeWithTakeUntilDestroyedKO() {
-                return this.#pokemonApiService.getPokemonById(82).pipe(    
-                    takeUntilDestroyed(), 
-                    switchMap(() => this.getPokemonEveryTwoseconds()),
-                    tap((pokemon) => {
-                        this.#rxjsService.currentPokemon.set(pokemon);
-                        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-                    }),     
-                );
-            }
+completeWithTakeUntilDestroyedKO() {
+    return this.#pokemonApiService.getPokemonById(82).pipe(    
+        takeUntilDestroyed(), 
+        switchMap(() => this.getPokemonEveryTwoseconds()),
+        tap((pokemon) => {
+            this.#rxjsService.currentPokemon.set(pokemon);
+            this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+        }),     
+    );
+}
         </textarea>
     }
     @case (codeStatus.CompleteWithTakeUntilDestroyedOK) {
         <textarea highlight-js lang="ts">
-            completeWithTakeUntilDestroyedOK() {
-                return this.#pokemonApiService.getPokemonById(82).pipe(
-                    switchMap(() => this.getPokemonEveryTwoseconds()),
-                    tap((pokemon) => {
-                        this.#rxjsService.currentPokemon.set(pokemon);
-                        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-                    }),    
-                    takeUntilDestroyed(), 
-                );
-            }
+completeWithTakeUntilDestroyedOK() {
+    return this.#pokemonApiService.getPokemonById(82).pipe(
+        switchMap(() => this.getPokemonEveryTwoseconds()),
+        tap((pokemon) => {
+            this.#rxjsService.currentPokemon.set(pokemon);
+            this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+        }),    
+        takeUntilDestroyed(), 
+    );
+}
         </textarea>
     }
     @case (codeStatus.CompleteWithTakeUntilKO) {
         <textarea highlight-js lang="ts">
-            completeWithTakeUntilKO() {
-                return this.#pokemonApiService.getPokemonById(82).pipe(    
-                    takeUntil(this.#destroy$),           
-                    switchMap(() => this.getPokemonEveryTwoseconds()),
-                    tap((pokemon) => {
-                        this.#rxjsService.currentPokemon.set(pokemon);
-                        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-                    }),     
-                );
-            }
+completeWithTakeUntilKO() {
+    return this.#pokemonApiService.getPokemonById(82).pipe(    
+        takeUntil(this.#destroy$),           
+        switchMap(() => this.getPokemonEveryTwoseconds()),
+        tap((pokemon) => {
+            this.#rxjsService.currentPokemon.set(pokemon);
+            this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+        }),     
+    );
+}
+ngOnDestroy(): void {
+    this.#destroy$.next();
+    this.#destroy$.complete();
+}
         </textarea>
     }
     @case (codeStatus.CompleteWithTakeUntilOK) {
         <textarea highlight-js lang="ts">
-            completeWithTakeUntilOK() {
-                return this.#pokemonApiService.getPokemonById(82).pipe(    
-                    switchMap(() => this.getPokemonEveryTwoseconds()),
-                    tap((pokemon) => {
-                        this.#rxjsService.currentPokemon.set(pokemon);
-                        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-                    }),    
-                    takeUntil(this.#destroy$) 
-                );
-            }
+completeWithTakeUntilOK() {
+    return this.#pokemonApiService.getPokemonById(82).pipe(    
+        switchMap(() => this.getPokemonEveryTwoseconds()),
+        tap((pokemon) => {
+            this.#rxjsService.currentPokemon.set(pokemon);
+            this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+        }),    
+        takeUntil(this.#destroy$) 
+    );
+}
+ngOnDestroy(): void {
+    this.#destroy$.next();
+    this.#destroy$.complete();
+}
         </textarea>
     }
     @case (codeStatus.CompleteWithTakeOneKO) {
         <textarea highlight-js lang="ts">
-            completeWithTakeOneKO() {
-                return this.#pokemonApiService.getPokemonById(82).pipe(    
-                    switchMap(() => this.getPokemonEveryTwoseconds()),
-                    tap((pokemon) => {
-                        this.#rxjsService.currentPokemon.set(pokemon);
-                        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-                    }), 
-                    take(1) 
-                );
-            }
+completeWithTakeOneKO() {
+    return this.#pokemonApiService.getPokemonById(82).pipe(    
+        switchMap(() => this.getPokemonEveryTwoseconds()),
+        tap((pokemon) => {
+            this.#rxjsService.currentPokemon.set(pokemon);
+            this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+        }), 
+        take(1) 
+    );
+}
         </textarea>
     }
     @case (codeStatus.CompleteWithTakeOneOK) {
         <textarea highlight-js lang="ts">
-            completeWithTakeOneOK() {
-                return this.#pokemonApiService.getPokemonById(82).pipe(    
-                    take(1),
-                    switchMap(() => this.getPokemonEveryTwoseconds()),
-                    tap((pokemon) => {
-                        this.#rxjsService.currentPokemon.set(pokemon);
-                        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-                    }),             
-                    takeUntil(this.#destroy$),   
-                );
-            }
+completeWithTakeOneOK() {
+    return this.#pokemonApiService.getPokemonById(82).pipe(    
+        take(1),
+        switchMap(() => this.getPokemonEveryTwoseconds()),
+        tap((pokemon) => {
+            this.#rxjsService.currentPokemon.set(pokemon);
+            this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+        }),             
+        takeUntil(this.#destroy$),   
+    );
+}
+ngOnDestroy(): void {
+    this.#destroy$.next();
+    this.#destroy$.complete();
+}
         </textarea>
     }
     @case (codeStatus.CompleteWithUnsubscribeOneOK) {
         <textarea highlight-js lang="ts">
-            completeWithUnsubscribeOneOK() {
-                return this.#pokemonApiService.getPokemonById(82).pipe(    
-                    switchMap(() => this.getPokemonEveryTwoseconds()),
-                    tap((pokemon) => {
-                        this.#rxjsService.currentPokemon.set(pokemon);
-                        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-                    }),             
-                ).subscribe();
-            }
+completeWithUnsubscribeOneOK() {
+    return this.#pokemonApiService.getPokemonById(82).pipe(    
+        switchMap(() => this.getPokemonEveryTwoseconds()),
+        tap((pokemon) => {
+            this.#rxjsService.currentPokemon.set(pokemon);
+            this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+        }),             
+    ).subscribe();
+}
+ngOnDestroy(): void {
+    this.#pokemonStreamSubscribed.unsubscribe();                
+}
         </textarea>
     }
 }   

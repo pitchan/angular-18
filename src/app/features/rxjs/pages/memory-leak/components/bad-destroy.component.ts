@@ -56,13 +56,7 @@ export class BadDestroyComponent {
 
     constructor() {
         const status = this.selectedFunction();
-        this.executeFunction(status);
-        /*effect(() => {
-            const status = this.selectedFunction();
-            if (status) {
-                this.executeFunction(status);
-            }
-        });*/
+        this.executeFunction(status);        
     }
 
     selectFunction(event: any) {
@@ -99,7 +93,7 @@ export class BadDestroyComponent {
         }
     }
 
-    startFunction() {
+    startFunction() {        
         if (this.#pokemonStream$) {
             this.#pokemonStreamSubscribed?.unsubscribe();
             this.#pokemonStreamSubscribed = this.#pokemonStream$.subscribe()
