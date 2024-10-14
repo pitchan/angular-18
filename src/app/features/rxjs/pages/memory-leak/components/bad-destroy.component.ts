@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, effect, inject, signal } from '@angular/core';
 import { Data } from '@angular/router';
 import { RxjsService } from '../../../services/rxjs.service';
 import { EMPTY, Observable, Subject, Subscriber, Subscription, catchError, interval, of, switchMap, take, takeUntil, tap } from 'rxjs';
@@ -33,6 +33,7 @@ export class BadDestroyComponent {
 
     #rxjsService = inject(RxjsService);
     #pokemonApiService = inject(PokemonApiService);
+    #destroyRef = inject(DestroyRef)
 
     #destroy$ = new Subject<void>();
 
@@ -120,7 +121,7 @@ export class BadDestroyComponent {
      */
     completeWithTakeUntilDestroyedKO() {
         return this.#pokemonApiService.getPokemonById(82).pipe(    
-            takeUntilDestroyed(), 
+            takeUntilDestroyed(this.#destroyRef), 
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);
@@ -139,7 +140,7 @@ export class BadDestroyComponent {
                 this.#rxjsService.currentPokemon.set(pokemon);
                 this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
             }),    
-            takeUntilDestroyed(), 
+            takeUntilDestroyed(this.#destroyRef), 
         );
     }
     

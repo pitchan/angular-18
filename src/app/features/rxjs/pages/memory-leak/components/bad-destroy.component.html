@@ -17,9 +17,10 @@
 @switch (selectedFunction()) {
     @case (codeStatus.CompleteWithTakeUntilDestroyedKO) {
         <textarea highlight-js lang="ts">
+#destroyRef = inject(DestroyRef);           
 completeWithTakeUntilDestroyedKO() {
     return this.#pokemonApiService.getPokemonById(82).pipe(    
-        takeUntilDestroyed(), 
+        takeUntilDestroyed(this.#destroyRef), 
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
             this.#rxjsService.currentPokemon.set(pokemon);
@@ -31,6 +32,7 @@ completeWithTakeUntilDestroyedKO() {
     }
     @case (codeStatus.CompleteWithTakeUntilDestroyedOK) {
         <textarea highlight-js lang="ts">
+#destroyRef = inject(DestroyRef);               
 completeWithTakeUntilDestroyedOK() {
     return this.#pokemonApiService.getPokemonById(82).pipe(
         switchMap(() => this.getPokemonEveryTwoseconds()),
@@ -38,7 +40,7 @@ completeWithTakeUntilDestroyedOK() {
             this.#rxjsService.currentPokemon.set(pokemon);
             this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
         }),    
-        takeUntilDestroyed(), 
+        takeUntilDestroyed(this.#destroyRef), 
     );
 }
         </textarea>
