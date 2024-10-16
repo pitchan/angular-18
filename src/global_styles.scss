@@ -7,7 +7,7 @@
     color: white;
 }
 
-.home-header {
+.home-title {
     .custom-card-info {
         padding: 2rem;
         background-color: rgb(197, 138, 27);
@@ -19,19 +19,6 @@ app-log-panel {
     .mat-mdc-button>.mat-icon {
         margin-right: 0;
     }
-}
-
-
-
-.custom-card {
-    cursor: pointer;
-    position: relative;
-    overflow: hidden; /* Assure que rien ne dépasse les bords de la card */
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-  
-.custom-card:hover {
-    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.6); /* Effet de brillance autour de la card */
 }
 
 .p-card-content {
