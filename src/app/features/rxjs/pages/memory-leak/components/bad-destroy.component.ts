@@ -119,7 +119,7 @@ export class BadDestroyComponent {
     /**
      * Complete observable with takeUntilDestroyed() not working
      */
-    completeWithTakeUntilDestroyedKO() {
+    completeWithTakeUntilDestroyedKO(): Observable<Pokemon> {
         return this.#pokemonApiService.getPokemonById(82).pipe(    
             takeUntilDestroyed(this.#destroyRef), 
             switchMap(() => this.getPokemonEveryTwoseconds()),
@@ -133,7 +133,7 @@ export class BadDestroyComponent {
     /**
      * Complete observable with takeUntilDestroyed() working properly
      */
-    completeWithTakeUntilDestroyedOK() {
+    completeWithTakeUntilDestroyedOK(): Observable<Pokemon> {
         return this.#pokemonApiService.getPokemonById(82).pipe(
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
@@ -148,7 +148,7 @@ export class BadDestroyComponent {
     /**
      * Complete observable with takeUntil() not working
      */
-    completeWithTakeUntilKO() {
+    completeWithTakeUntilKO(): Observable<Pokemon> {
         return this.#pokemonApiService.getPokemonById(82).pipe(    
             takeUntil(this.#destroy$),           
             switchMap(() => this.getPokemonEveryTwoseconds()),
@@ -162,7 +162,7 @@ export class BadDestroyComponent {
     /**
      * Complete observable with takeUntil() working properly
      */
-    completeWithTakeUntilOK() {
+    completeWithTakeUntilOK(): Observable<Pokemon> {
         return this.#pokemonApiService.getPokemonById(82).pipe(    
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
@@ -176,7 +176,7 @@ export class BadDestroyComponent {
     /**
      * Complete observable with take(1) not working
      */
-    completeWithTakeOneKO() {
+    completeWithTakeOneKO(): Observable<Pokemon> {
         return this.#pokemonApiService.getPokemonById(82).pipe(    
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
@@ -190,7 +190,7 @@ export class BadDestroyComponent {
     /**
      * Complete observable with take(1) working properly
      */
-    completeWithTakeOneOK() {
+    completeWithTakeOneOK(): Observable<Pokemon> {
         return this.#pokemonApiService.getPokemonById(82).pipe(    
             take(1),
             switchMap(() => this.getPokemonEveryTwoseconds()),
@@ -204,8 +204,9 @@ export class BadDestroyComponent {
 
     /**
      * Complete observable unsubscribing after ngOnDestroy
+     * @returns
      */
-    completeWithUnsubscribeOneOK() {
+    completeWithUnsubscribeOneOK(): Observable<Pokemon> {
         return this.#pokemonApiService.getPokemonById(82).pipe(    
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
