@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, effect, inject, signal } from '@angular/core';
 import { Data } from '@angular/router';
 import { RxjsService } from '../../../services/rxjs.service';
-import { EMPTY, Observable, Subject, Subscriber, Subscription, catchError, interval, of, switchMap, take, takeUntil, tap } from 'rxjs';
+import { EMPTY, Observable, Subject, Subscriber, Subscription, catchError, interval, map, min, of, switchMap, take, takeUntil, tap } from 'rxjs';
 import { PokemonApiService } from '../../../../../core/services/pokemon-api.service';
 import { MatButtonModule } from '@angular/material/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,8 +16,8 @@ export enum CodeStatus {
     CompleteWithTakeUntilDestroyedOK = 'CompleteWithTakeUntilDestroyedOK',
     CompleteWithTakeUntilKO = 'CompleteWithTakeUntilKO',
     CompleteWithTakeUntilOK = 'CompleteWithTakeUntilOK',
-    CompleteWithTakeOneKO = 'CompleteWithTakeOneKO',
-    CompleteWithTakeOneOK = 'CompleteWithTakeOneOK',
+    completeWithTakeKO = 'completeWithTakeKO',
+    completeWithTakeOK = 'completeWithTakeOK',
     CompleteWithUnsubscribeOneOK = 'CompleteWithUnsubscribeOneOK'
 }
 
@@ -41,7 +41,7 @@ export class BadDestroyComponent {
     #pokemonStreamSubscribed: Subscription | null = null;
 
     codeStatus = CodeStatus;
-    selectedFunction = signal<CodeStatus>(this.codeStatus.CompleteWithTakeOneKO); // Variable pour stocker l'option sélectionnée
+    selectedFunction = signal<CodeStatus>(this.codeStatus.completeWithTakeKO); // Variable pour stocker l'option sélectionnée
     
     
 
@@ -79,17 +79,17 @@ export class BadDestroyComponent {
             case CodeStatus.CompleteWithTakeUntilOK:
                 this.#pokemonStream$ = this.completeWithTakeUntilOK();
                 break;
-            case CodeStatus.CompleteWithTakeOneKO:
-                this.#pokemonStream$ = this.completeWithTakeOneKO();
+            case CodeStatus.completeWithTakeKO:
+                this.#pokemonStream$ = this.completeWithTakeKO();
                 break;
-            case CodeStatus.CompleteWithTakeOneOK:
-                this.#pokemonStream$ = this.completeWithTakeOneOK();
+            case CodeStatus.completeWithTakeOK:
+                this.#pokemonStream$ = this.completeWithTakeOK();
                 break; 
             case CodeStatus.CompleteWithUnsubscribeOneOK:
                 this.#pokemonStream$ = this.completeWithUnsubscribeOneOK();
                 break; 
             default : 
-                this.#pokemonStream$ = this.completeWithTakeOneKO();
+                this.#pokemonStream$ = this.completeWithTakeKO();
                 break;    
         }
     }
@@ -105,22 +105,31 @@ export class BadDestroyComponent {
         this.#pokemonStreamSubscribed?.unsubscribe()
     }
     
-    getPokemonEveryTwoseconds() {
+    getPokemonEveryTwoseconds(multiplier?: number) {
         return interval(2000).pipe(
             switchMap(() => {
-                const randomId = Math.floor(Math.random() * 898) + 1;
+                const randomId = multiplier ? this.getRandomMultipleId(multiplier) :
+                    Math.floor(Math.random() * 898) + 1;
                 return this.#pokemonApiService.getPokemonById(randomId);
             })
         );
     }
 
-
+    getRandomMultipleId(multiplier: number): number {
+        const maxId = 898; // Le nombre maximum d'ID Pokémon
+        
+        const maxMultiplier = Math.floor(maxId / multiplier);
+        const randomMultiplier = Math.floor(Math.random() * maxMultiplier) + 1;
+    
+        // On retourne un multiple valide de multiplier
+        return randomMultiplier * multiplier;
+    }
 
     /**
      * Complete observable with takeUntilDestroyed() not working
      */
-    completeWithTakeUntilDestroyedKO(): Observable<Pokemon> {
-        return this.#pokemonApiService.getPokemonById(82).pipe(    
+    completeWithTakeUntilDestroyedKO() {
+        return of().pipe(    
             takeUntilDestroyed(this.#destroyRef), 
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
@@ -133,8 +142,8 @@ export class BadDestroyComponent {
     /**
      * Complete observable with takeUntilDestroyed() working properly
      */
-    completeWithTakeUntilDestroyedOK(): Observable<Pokemon> {
-        return this.#pokemonApiService.getPokemonById(82).pipe(
+    completeWithTakeUntilDestroyedOK() {
+        return of().pipe(
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);
@@ -148,8 +157,8 @@ export class BadDestroyComponent {
     /**
      * Complete observable with takeUntil() not working
      */
-    completeWithTakeUntilKO(): Observable<Pokemon> {
-        return this.#pokemonApiService.getPokemonById(82).pipe(    
+    completeWithTakeUntilKO() {
+        return of().pipe(    
             takeUntil(this.#destroy$),           
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
@@ -162,8 +171,8 @@ export class BadDestroyComponent {
     /**
      * Complete observable with takeUntil() working properly
      */
-    completeWithTakeUntilOK(): Observable<Pokemon> {
-        return this.#pokemonApiService.getPokemonById(82).pipe(    
+    completeWithTakeUntilOK() {
+        return of().pipe(    
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);
@@ -176,38 +185,46 @@ export class BadDestroyComponent {
     /**
      * Complete observable with take(1) not working
      */
-    completeWithTakeOneKO(): Observable<Pokemon> {
-        return this.#pokemonApiService.getPokemonById(82).pipe(    
-            switchMap(() => this.getPokemonEveryTwoseconds()),
+    completeWithTakeKO() {
+        const multiplierList = [2,3,5,7];
+        return of(...multiplierList).pipe(
+            switchMap((multiplier) => {
+                console.log(multiplier);
+                return this.getPokemonEveryTwoseconds(multiplier)
+            }),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);
                 this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
             }), 
-            take(1) 
+            take(2),
+            takeUntil(this.#destroy$) 
         );
     }
 
     /**
      * Complete observable with take(1) working properly
      */
-    completeWithTakeOneOK(): Observable<Pokemon> {
-        return this.#pokemonApiService.getPokemonById(82).pipe(    
-            take(1),
-            switchMap(() => this.getPokemonEveryTwoseconds()),
+    completeWithTakeOK() {
+        const multiplierList = [2,3,5,7];
+        return of(...multiplierList).pipe(
+            take(2),
+            switchMap((multiplier) => {
+                console.log(multiplier);
+                return this.getPokemonEveryTwoseconds(multiplier)
+            }),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);
                 this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-            }),             
-            takeUntil(this.#destroy$),   
-        );
+            }), 
+            takeUntil(this.#destroy$)
+        );        
     }
 
     /**
      * Complete observable unsubscribing after ngOnDestroy
-     * @returns
      */
-    completeWithUnsubscribeOneOK(): Observable<Pokemon> {
-        return this.#pokemonApiService.getPokemonById(82).pipe(    
+    completeWithUnsubscribeOneOK() {
+        return of().pipe(    
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);

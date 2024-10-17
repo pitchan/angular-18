@@ -1,8 +1,8 @@
 <div class="">
-    <p class="text-gray-400 text-2xl font-bold">Ways to complete an observable</p>
-    <mat-radio-group [value]="selectedFunction()" (change)="selectFunction($event)">
+    <p class="text-gray-400 text-2xl font-bold">Bad destroy component</p>
+    <mat-radio-group class="grid grid-cols-2" [value]="selectedFunction()" (change)="selectFunction($event)">
         @for(status of codeStatus | keyvalue; track status) {
-            <mat-radio-button [value]="status.value">
+            <mat-radio-button class="grid grid-cols-2" [value]="status.value">
                 {{ status.value }}
             </mat-radio-button>
         }
@@ -19,7 +19,7 @@
         <textarea highlight-js lang="ts">
 #destroyRef = inject(DestroyRef);           
 completeWithTakeUntilDestroyedKO() {
-    return this.#pokemonApiService.getPokemonById(82).pipe(    
+    return of().pipe(    
         takeUntilDestroyed(this.#destroyRef), 
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
@@ -34,7 +34,7 @@ completeWithTakeUntilDestroyedKO() {
         <textarea highlight-js lang="ts">
 #destroyRef = inject(DestroyRef);               
 completeWithTakeUntilDestroyedOK() {
-    return this.#pokemonApiService.getPokemonById(82).pipe(
+    return of().pipe(
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
             this.#rxjsService.currentPokemon.set(pokemon);
@@ -48,7 +48,7 @@ completeWithTakeUntilDestroyedOK() {
     @case (codeStatus.CompleteWithTakeUntilKO) {
         <textarea highlight-js lang="ts">
 completeWithTakeUntilKO() {
-    return this.#pokemonApiService.getPokemonById(82).pipe(    
+    return of().pipe(    
         takeUntil(this.#destroy$),           
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
@@ -66,7 +66,7 @@ ngOnDestroy(): void {
     @case (codeStatus.CompleteWithTakeUntilOK) {
         <textarea highlight-js lang="ts">
 completeWithTakeUntilOK() {
-    return this.#pokemonApiService.getPokemonById(82).pipe(    
+    return of().pipe(    
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
             this.#rxjsService.currentPokemon.set(pokemon);
@@ -81,32 +81,45 @@ ngOnDestroy(): void {
 }
         </textarea>
     }
-    @case (codeStatus.CompleteWithTakeOneKO) {
+    @case (codeStatus.completeWithTakeKO) {
         <textarea highlight-js lang="ts">
-completeWithTakeOneKO() {
-    return this.#pokemonApiService.getPokemonById(82).pipe(    
-        switchMap(() => this.getPokemonEveryTwoseconds()),
+completeWithTakeKO() {
+    const multiplierList = [2,3,5,7];
+    return of(...multiplierList).pipe(
+        switchMap((multiplier) => {
+            console.log(multiplier);
+            return this.getPokemonEveryTwoseconds(multiplier)
+        }),
         tap((pokemon) => {
             this.#rxjsService.currentPokemon.set(pokemon);
             this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
         }), 
-        take(1) 
+        take(2),
+        takeUntil(this.#destroy$) 
     );
+}
+ngOnDestroy(): void {
+    this.#destroy$.next();
+    this.#destroy$.complete();
 }
         </textarea>
     }
-    @case (codeStatus.CompleteWithTakeOneOK) {
+    @case (codeStatus.completeWithTakeOK) {
         <textarea highlight-js lang="ts">
-completeWithTakeOneOK() {
-    return this.#pokemonApiService.getPokemonById(82).pipe(    
-        take(1),
-        switchMap(() => this.getPokemonEveryTwoseconds()),
+completeWithTakeOK() {
+    const multiplierList = [2,3,5,7];
+    return of(...multiplierList).pipe(
+        take(2),
+        switchMap((multiplier) => {
+            console.log(multiplier);
+            return this.getPokemonEveryTwoseconds(multiplier)
+        }),
         tap((pokemon) => {
             this.#rxjsService.currentPokemon.set(pokemon);
             this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-        }),             
-        takeUntil(this.#destroy$),   
-    );
+        }), 
+        takeUntil(this.#destroy$)
+    );        
 }
 ngOnDestroy(): void {
     this.#destroy$.next();
@@ -117,7 +130,7 @@ ngOnDestroy(): void {
     @case (codeStatus.CompleteWithUnsubscribeOneOK) {
         <textarea highlight-js lang="ts">
 completeWithUnsubscribeOneOK() {
-    return this.#pokemonApiService.getPokemonById(82).pipe(    
+    return of().pipe(    
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
             this.#rxjsService.currentPokemon.set(pokemon);
