@@ -7,10 +7,10 @@ import { Pokemon } from '../../../../../core/model/pokemon.model';
 
 
 @Component({
-  selector: 'app-bad-destroy',
+  selector: 'app-good-destroy',
   standalone: true,
   imports: [CommonModule, MatButtonModule, HighlightJsDirective, MatRadioModule],  
-  templateUrl: './bad-destroy.component.html',
+  templateUrl: './good-destroy.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoodDestroyComponent {

@@ -1,26 +1,26 @@
-<div id="memoryLeakPage">
-    <mat-card class="flex flex-col justify-between mt-4 p-4">        
-        @if ( componentExist ) {
-            <app-bad-destroy></app-bad-destroy>
-        } @else {
-            <p class="text-gray-400 text-2xl font-bold text-center">Component destroyed</p>
-        }
-        <div class="grid grid-cols-2 gap-3">
-            <button mat-raised-button color="primary" (click)="destroyComponent()">Destroy component</button>
-            <button mat-raised-button color="accent" (click)="reloadComponent()">Reload component</button>
-        </div>
-    </mat-card>
+<mat-card class="flex flex-col justify-between mt-4 p-4">        
+    @if ( componentExist && way() === 'good') {
+        <app-good-destroy></app-good-destroy>
+    } @else if (componentExist && way() === 'bad') {
+        <app-bad-destroy></app-bad-destroy>
+    } @else {
+        <p class="text-gray-400 text-2xl font-bold text-center">Component destroyed</p>
+    }
+    <div class="grid grid-cols-2 gap-3">
+        <button mat-raised-button color="primary" (click)="destroyComponent()">Destroy component</button>
+        <button mat-raised-button color="accent" (click)="reloadComponent()">Reload component</button>
+    </div>
+</mat-card>
 
-    <div class="grid grid-cols-2 gap-4 my-3">
-        <app-pokemon-show
-          [name]="pokemon()?.name || ''"
-          [picture]="pokemon()?.sprites?.bigPicture || ''">
-        </app-pokemon-show>
+<div class="grid grid-cols-2 gap-4 my-3">
+    <app-pokemon-show
+        [name]="pokemon()?.name || ''"
+        [picture]="pokemon()?.sprites?.bigPicture || ''">
+    </app-pokemon-show>
 
-        <app-log-panel ></app-log-panel>
-    </div> 
+    <app-log-panel ></app-log-panel>
+</div> 
     
     
-</div>
 
 

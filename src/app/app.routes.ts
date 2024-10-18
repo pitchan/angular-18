@@ -22,7 +22,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'memory-leak',
+    path: 'memory-leak/:way',
     loadComponent: () =>
       import('./features/rxjs/pages/memory-leak/memory-leak.component').then(
         (c) => c.MemoryLeakComponent
