@@ -17,7 +17,7 @@
       <div class="m-4 max-h-64 overflow-auto">
         @for (log of logMessages(); track log) {
           <div class="m-1">
-            <mat-chip [class]="log.type === 'request' ? 'log-request': 'log-response'">
+            <mat-chip id="chips" [class]="log.type === 'request' ? 'log-request': 'log-response'">
               {{ log.message }}
             </mat-chip>
           </div>

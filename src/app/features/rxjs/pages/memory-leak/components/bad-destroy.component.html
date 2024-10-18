@@ -19,7 +19,7 @@
         <textarea highlight-js lang="ts">
 #destroyRef = inject(DestroyRef);           
 completeWithTakeUntilDestroyedKO() {
-    return of().pipe(    
+    return of([]).pipe(    
         takeUntilDestroyed(this.#destroyRef), 
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
@@ -34,7 +34,7 @@ completeWithTakeUntilDestroyedKO() {
         <textarea highlight-js lang="ts">
 #destroyRef = inject(DestroyRef);               
 completeWithTakeUntilDestroyedOK() {
-    return of().pipe(
+    return of([]).pipe(
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
             this.#rxjsService.currentPokemon.set(pokemon);
@@ -48,7 +48,7 @@ completeWithTakeUntilDestroyedOK() {
     @case (codeStatus.CompleteWithTakeUntilKO) {
         <textarea highlight-js lang="ts">
 completeWithTakeUntilKO() {
-    return of().pipe(    
+    return of([]).pipe(    
         takeUntil(this.#destroy$),           
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
@@ -66,7 +66,7 @@ ngOnDestroy(): void {
     @case (codeStatus.CompleteWithTakeUntilOK) {
         <textarea highlight-js lang="ts">
 completeWithTakeUntilOK() {
-    return of().pipe(    
+    return of([]).pipe(    
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
             this.#rxjsService.currentPokemon.set(pokemon);
@@ -130,7 +130,7 @@ ngOnDestroy(): void {
     @case (codeStatus.CompleteWithUnsubscribeOneOK) {
         <textarea highlight-js lang="ts">
 completeWithUnsubscribeOneOK() {
-    return of().pipe(    
+    return of([]).pipe(    
         switchMap(() => this.getPokemonEveryTwoseconds()),
         tap((pokemon) => {
             this.#rxjsService.currentPokemon.set(pokemon);

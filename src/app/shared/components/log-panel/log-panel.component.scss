@@ -1,17 +1,22 @@
-::ng-deep .request-log-component {
-    .mat-mdc-standard-chip {
-      &.log-request, &.log-response {
-        .mdc-evolution-chip__text-label {
-          color: white;
-        }
-      }
-  
-      &.log-request {
-        background-color: rgb(115, 115, 233);
-      }
-  
-      &.log-response {
-        background-color: rgb(48, 187, 48);
+.mat-mdc-button>.mat-icon {
+  margin-right: 0;
+}
+
+// Wrong way to custom mat-chip better place it in global styles
+/*::ng-deep .request-log-component {
+  .mat-mdc-standard-chip {
+    &.log-request, &.log-response {
+      .mdc-evolution-chip__text-label {
+        color: white;
       }
     }
+
+    &.log-request {
+      background-color: rgb(115, 115, 233);
+    }
+
+    &.log-response {
+      background-color: rgb(48, 187, 48);
+    }
   }
+}*/

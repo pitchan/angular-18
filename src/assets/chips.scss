@@ -1,0 +1,15 @@
+mat-chip.mat-mdc-standard-chip {
+    &.log-request, &.log-response {
+        .mdc-evolution-chip__text-label {
+            color: white;
+        }
+    }
+
+    &.log-request {
+        background-color: rgb(115, 115, 233);
+    }
+
+    &.log-response {
+        background-color: rgb(48, 187, 48);
+    }
+}

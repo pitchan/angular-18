@@ -129,7 +129,7 @@ export class BadDestroyComponent {
      * Complete observable with takeUntilDestroyed() not working
      */
     completeWithTakeUntilDestroyedKO() {
-        return of().pipe(    
+        return of([]).pipe(    
             takeUntilDestroyed(this.#destroyRef), 
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
@@ -143,7 +143,7 @@ export class BadDestroyComponent {
      * Complete observable with takeUntilDestroyed() working properly
      */
     completeWithTakeUntilDestroyedOK() {
-        return of().pipe(
+        return of([]).pipe(
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);
@@ -158,7 +158,7 @@ export class BadDestroyComponent {
      * Complete observable with takeUntil() not working
      */
     completeWithTakeUntilKO() {
-        return of().pipe(    
+        return of([]).pipe(    
             takeUntil(this.#destroy$),           
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
@@ -172,7 +172,7 @@ export class BadDestroyComponent {
      * Complete observable with takeUntil() working properly
      */
     completeWithTakeUntilOK() {
-        return of().pipe(    
+        return of([]).pipe(    
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);
@@ -224,7 +224,7 @@ export class BadDestroyComponent {
      * Complete observable unsubscribing after ngOnDestroy
      */
     completeWithUnsubscribeOneOK() {
-        return of().pipe(    
+        return of([]).pipe(    
             switchMap(() => this.getPokemonEveryTwoseconds()),
             tap((pokemon) => {
                 this.#rxjsService.currentPokemon.set(pokemon);

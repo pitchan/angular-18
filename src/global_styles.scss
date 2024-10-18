@@ -1,31 +1,7 @@
 /* Add application styles & imports to this file! */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import './assets/chips.scss';
+@import './assets/cards.scss';
+@import './assets/hljs.scss';
 
 @tailwind utilities;
-
-::ng-deep .mat-mdc-chip {
-    color: white;
-}
-
-.home-title {
-    .custom-card-info {
-        padding: 2rem;
-        background-color: rgb(197, 138, 27);
-        color: #fff;
-    }
-}
-
-app-log-panel {
-    .mat-mdc-button>.mat-icon {
-        margin-right: 0;
-    }
-}
-
-.p-card-content {
-    padding: 0;
-}
-
-.hljs {
-    padding: 1rem;
-    overflow: auto; 
-}
