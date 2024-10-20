@@ -1,43 +1,29 @@
+{{selectedMethod()}}
+@if (selectedMethod() === 'Start') {
+    @let myPokemon = pokemon$ | async;
+}
+
 <div class="">
     <p class="text-gray-400 text-2xl font-bold mt-0">Good destroy component</p>
     <mat-radio-group class="grid grid-cols-2" [value]="selectedMethod()" (change)="selectMethod($event)">
-        <mat-radio-button class="grid grid-cols-2" value="Signal">
-            Signal
+        <mat-radio-button class="grid grid-cols-2" value="Stop">
+            Stop observable
         </mat-radio-button>
-        <mat-radio-button class="grid grid-cols-2" value="Observable">
-            Observable
+        <mat-radio-button class="grid grid-cols-2" value="Start">
+            Start Observable
         </mat-radio-button>
     </mat-radio-group>        
     <br/>
 </div>
 
-<div>    
-    @switch (selectedMethod()) {
-        @case (methodName.signal) {
-            <textarea highlight-js lang="ts">            
-toSignal(of([]).pipe(    
-    switchMap(() => this.getPokemonEveryTwoseconds()),
-    tap((pokemon) => {
-        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-    }),     
-));
-            </textarea>
-            <textarea highlight-js lang="html">
-<div>{ { pokemon() } }</div>
-            </textarea>
-        }
-        @case (methodName.observable) {
-            <textarea highlight-js lang="ts">
-pokemon$ = of([]).pipe(
-    switchMap(() => this.getPokemonEveryTwoseconds()),
-    tap((pokemon) => {
-        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
-    }),    
-);
-            </textarea>
-            <textarea highlight-js lang="html">
-<div>{ { pokemon$ | async } }</div>
-            </textarea>
-        }
-    }   
+<div> 
+    <textarea highlight-js lang="ts">            
+        toSignal(of([]).pipe(    
+            switchMap(() => this.getPokemonEveryTwoseconds()),
+            tap((pokemon) => {
+                this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+            }),     
+        ));
+    </textarea>
 </div>
+ 

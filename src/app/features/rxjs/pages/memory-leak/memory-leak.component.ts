@@ -25,6 +25,8 @@ export class MemoryLeakComponent {
   componentExist = true;
   pokemon: WritableSignal<Pokemon | null> = this.#rxjsService.currentPokemon;
 
+  pokemon$ = this.#rxjsService.currentPokemon$;
+
   destroyComponent() {
     this.componentExist = false;
   }

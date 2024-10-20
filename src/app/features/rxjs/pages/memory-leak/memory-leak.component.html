@@ -13,12 +13,20 @@
 </mat-card>
 
 <div class="grid grid-cols-2 gap-4 my-3">
-    <app-pokemon-show
+    <!--<app-pokemon-show
         [name]="pokemon()?.name || ''"
         [picture]="pokemon()?.sprites?.bigPicture || ''">
-    </app-pokemon-show>
+    </app-pokemon-show>-->
 
-    <app-log-panel ></app-log-panel>
+    @let myPokemon = pokemon$ | async; 
+    <app-pokemon-show
+        [name]="myPokemon?.name || ''"
+        [picture]="myPokemon?.sprites?.bigPicture || ''">
+    </app-pokemon-show>
+    
+    
+
+    <app-log-panel></app-log-panel>
 </div> 
     
     
