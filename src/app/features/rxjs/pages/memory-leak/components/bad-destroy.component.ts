@@ -60,12 +60,20 @@ export class BadDestroyComponent {
         this.executeFunction(status);        
     }
 
-    selectFunction(event: any) {
+    /**
+     * Select one observable function
+     * @param event The value selected 
+     */
+    selectFunction(event: any): void {
         this.selectedFunction.set(event.value);
         this.executeFunction(event.value);
     }
 
-    executeFunction(status: string) {
+    /**
+     * Execute observable depending on the one selected
+     * @param status Name of the selected function
+     */
+    executeFunction(status: string): void {
         switch (status) {
             case CodeStatus.CompleteWithTakeUntilDestroyedKO:
                 this.#pokemonStream$ = this.completeWithTakeUntilDestroyedKO();
@@ -94,18 +102,29 @@ export class BadDestroyComponent {
         }
     }
 
-    startFunction() {        
+    /**
+     * Start observable
+     */
+    startFunction(): void {        
         if (this.#pokemonStream$) {
             this.#pokemonStreamSubscribed?.unsubscribe();
             this.#pokemonStreamSubscribed = this.#pokemonStream$.subscribe()
         }
     }
 
+    /**
+     * Destroy observable
+     */
     destroyFunction() {
         this.#pokemonStreamSubscribed?.unsubscribe()
     }
     
-    getPokemonEveryTwoseconds(multiplier?: number) {
+    /**
+     * Automatically fetches and updates the current Pokémon at regular intervals
+     * @param multiplier 
+     * @returns Observable<Pokemon>
+     */
+    getPokemonEveryTwoseconds(multiplier?: number): Observable<Pokemon> {
         return interval(2000).pipe(
             switchMap(() => {
                 const randomId = multiplier ? this.getRandomMultipleId(multiplier) :
@@ -115,13 +134,18 @@ export class BadDestroyComponent {
         );
     }
 
+    /**
+     * Get pokemon depending on a multiplier
+     * @param multiplier 
+     * @returns number
+     */
     getRandomMultipleId(multiplier: number): number {
-        const maxId = 898; // Le nombre maximum d'ID Pokémon
+        const maxId = 898; // Max pokemon number
         
         const maxMultiplier = Math.floor(maxId / multiplier);
         const randomMultiplier = Math.floor(Math.random() * maxMultiplier) + 1;
     
-        // On retourne un multiple valide de multiplier
+        // Return a valid multiple of multiply
         return randomMultiplier * multiplier;
     }
 
@@ -233,8 +257,7 @@ export class BadDestroyComponent {
         );
     }
 
-
-
+    
     ngOnDestroy(): void {
         this.#destroy$.next();
         this.#destroy$.complete();

@@ -31,7 +31,12 @@ export class MemoryLeakComponent {
   pokemon$: Observable<Pokemon> = EMPTY;
   selectedMethod = signal<string>('stop');
 
-  selectMethod(event: any) {
+  /**
+   * Radio button to start or stop stream
+   * @param event start or stop 
+   * @returns 
+   */
+  selectMethod(event: any): void {
     const method = event.value;
     this.selectedMethod.set(event.value);
     if (method === 'start') {
@@ -41,29 +46,33 @@ export class MemoryLeakComponent {
     this.pokemon$ = EMPTY;
   }
 
-  autoUpdatePokemon() {
-    return of([]).pipe(
-      switchMap(() => this.getPokemonEveryTwoseconds()),
+  /**
+   * Automatically fetches and updates the current Pokémon at regular intervals
+   * @returns {Observable<Pokemon>} An observable that emits updated Pokémon data
+   */
+  autoUpdatePokemon(): Observable<Pokemon> {
+    return interval(2000).pipe(
+      switchMap(() => {
+        const randomId = Math.floor(Math.random() * 898) + 1;
+        return this.#pokemonApiService.getPokemonById(randomId);
+      }),
       tap((pokemon) => {
           this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
       }),    
     );
   }
 
-  getPokemonEveryTwoseconds(multiplier?: number) {
-    return interval(2000).pipe(
-        switchMap(() => {
-            const randomId = Math.floor(Math.random() * 898) + 1;
-            return this.#pokemonApiService.getPokemonById(randomId);
-        })
-    );
-  }
-
-  destroyComponent() {
+  /**
+   * Destroy components starting observables
+   */
+  destroyComponent(): void {
     this.componentExist = false;
   }
 
-  reloadComponent() {
+  /**
+   * Reload components starting observables
+   */
+  reloadComponent(): void {
     this.componentExist = true;
   }
 }
