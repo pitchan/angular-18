@@ -21,15 +21,22 @@ export class ChangeDetectionComponent implements DoCheck, AfterViewChecked  {
 
   data: string = 'Initial Data';
   inputValue: string = 'Initial Input Value';
-  counter = 0;
+  // counter = 0;
+  private _counter = 0;
+  get counter() {
+    console.log('get counter');
+    return this._counter;
+  }
+
+  set counter(value) {
+    console.log('get counter');
+    this._counter++;
+  }
 
   pokemon: Pokemon | null = null;
 
   // pokemon$ = this.autoUpdatePokemon();
   
-
-  
-
   constructor() {    
     console.log('ParentComponent: Constructor');
     // this.autoUpdatePokemon().subscribe();

@@ -1,15 +1,18 @@
 <mat-card> 
     @if (name()) {
-      <h1 class="text-700 text-center">{{ name() }}</h1>
-      <div class="overflow-hidden text-center">
-        <img 
-          style="width:-webkit-fill-available"
-          [src]="picture()" 
-          alt="Pokemon Image" 
-          class="pokemon-image"
-          (click)="openPreview(picture())"
-        />
-      </div>
+      <div [class]="state().isImageLoaded() ? 'show-pokemon' : 'hide-pokemon'">
+        <h1 class="text-700 text-center">{{ name() }}</h1>           
+        <div class="overflow-hidden text-center">
+          <img 
+            style="width:-webkit-fill-available"
+            [src]="picture()" 
+            alt="Pokemon Image" 
+            class="pokemon-image"
+            (load)="onImageLoad()"
+            (click)="openPreview(picture())"
+          />
+        </div>
+      </div>      
     } @else {
       <h1 class="text-700 text-center">Select Pokemon</h1>
     }     

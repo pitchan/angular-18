@@ -1,0 +1,10 @@
+.show-pokemon {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;  /* Transition de l'opacité */
+}
+
+.hide-pokemon {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;  /* Transition de l'opacité */
+  pointer-events: none;
+}
