@@ -1,0 +1,7 @@
+<button (click)="changeData()">Change Data</button>
+<app-child-signal [data]="data()" [inputValue]="inputValue()" [(inputValueChange)]="inputValueChange"></app-child-signal>
+
+<app-pokemon-show
+    [name]="pokemon()?.name || ''"
+    [picture]="pokemon()?.sprites?.bigPicture || ''">
+</app-pokemon-show> 

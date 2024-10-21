@@ -10,7 +10,11 @@
           <button mat-menu-item [routerLink]="['/memory-leak/bad']">Bad Destroy</button>
           <button mat-menu-item [routerLink]="['/memory-leak/good']">Good Destroy</button>
         </mat-menu>
-        <button mat-button [routerLink]="['/change-detection']">Change Detection</button>
+        <button mat-button [matMenuTriggerFor]="menuCycle" [routerLink]="['/change-detection']">Change Detection</button>
+        <mat-menu #menuCycle="matMenu">
+          <button mat-menu-item [routerLink]="['/change-detection']">Classic change detection</button>
+          <button mat-menu-item [routerLink]="['/signal-detection']">Signal change</button>
+        </mat-menu>
       </div>
     </span>
   

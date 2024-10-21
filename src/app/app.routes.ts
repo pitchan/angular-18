@@ -35,5 +35,12 @@ export const routes: Routes = [
         (c) => c.ChangeDetectionComponent
       ),
   },
+  {
+    path: 'signal-detection',
+    loadComponent: () =>
+      import('./features/angular-cycles/pages/signal-detection/signal-detection.component').then(
+        (c) => c.SignalDetectionComponent
+      ),
+  },
   // Vous pouvez ajouter d'autres routes ici
 ];

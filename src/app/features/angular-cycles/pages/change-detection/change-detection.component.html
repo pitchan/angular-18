@@ -5,4 +5,15 @@
 
     <p>Counter: {{ counter }}</p>
     
+
+    <!--@let myPokemon = pokemon$ | async;
+        <app-pokemon-show
+            [name]="myPokemon?.name || ''"
+            [picture]="myPokemon?.sprites?.bigPicture || ''">
+        </app-pokemon-show> 
+    -->
+    <app-pokemon-show
+        [name]="pokemon?.name || ''"
+        [picture]="pokemon?.sprites?.bigPicture || ''">
+    </app-pokemon-show> 
 </div>

@@ -1,25 +1,58 @@
-import { AfterViewChecked, ChangeDetectionStrategy, Component, DoCheck } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, DoCheck, inject } from '@angular/core';
 import { ChildComponent } from './components/child.component';
+import { Observable, interval, switchMap, tap } from 'rxjs';
+import { Pokemon } from '../../../../core/model/pokemon.model';
+import { PokemonApiService } from '../../../../core/services/pokemon-api.service';
+import { RxjsService } from '../../../rxjs/services/rxjs.service';
+import { CommonModule } from '@angular/common';
+import { PokemonShowComponent } from '../../../../shared/components/pokemon-show/pokemon-show.component';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-change-detection',
   standalone: true,
-  imports: [ChildComponent],
+  imports: [CommonModule, ChildComponent, PokemonShowComponent],
   templateUrl: './change-detection.component.html',
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangeDetectionComponent implements DoCheck, AfterViewChecked  {
 
+  #pokemonApiService = inject(PokemonApiService);
+  #rxjsService = inject(RxjsService);
+
   data: string = 'Initial Data';
   inputValue: string = 'Initial Input Value';
   counter = 0;
+
+  pokemon: Pokemon | null = null;
+
+  // pokemon$ = this.autoUpdatePokemon();
   
 
-  constructor() {
+  
+
+  constructor() {    
     console.log('ParentComponent: Constructor');
-    /*setInterval(() => {
-      this.counter++;
-    }, 100);*/
+    // this.autoUpdatePokemon().subscribe();
+    toSignal(this.autoUpdatePokemon());
+  }
+
+  /**
+   * Automatically fetches and updates the current Pokémon at regular intervals
+   * @returns {Observable<Pokemon>} An observable that emits updated Pokémon data
+   */
+  autoUpdatePokemon(): Observable<Pokemon> {
+    return interval(2000).pipe(
+      switchMap(() => {
+        const randomId = Math.floor(Math.random() * 898) + 1;
+        return this.#pokemonApiService.getPokemonById(randomId);
+      }),
+      tap((pokemon) => {
+        console.log('test');
+        this.pokemon = pokemon;
+        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+      }),    
+    );
   }
 
   ngDoCheck() {
