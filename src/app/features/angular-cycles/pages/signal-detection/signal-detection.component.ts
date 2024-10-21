@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { PokemonShowComponent } from '../../../../shared/components/pokemon-show/pokemon-show.component';
 import { Pokemon } from '../../../../core/model/pokemon.model';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -7,10 +7,8 @@ import { Observable, interval, switchMap, tap } from 'rxjs';
 import { PokemonApiService } from '../../../../core/services/pokemon-api.service';
 import { RxjsService } from '../../../rxjs/services/rxjs.service';
 import { ChildSignalComponent } from './components/child-signal.component';
-import { ChangeDetectionStrategy } from '@angular/compiler';
 
 @Component({
-  selector: 'app-signal-detection',
   standalone: true,
   imports: [CommonModule, PokemonShowComponent, ChildSignalComponent],
   templateUrl: './signal-detection.component.html',
@@ -37,7 +35,6 @@ export class SignalDetectionComponent {
         return this.#pokemonApiService.getPokemonById(randomId);
       }),
       tap((pokemon) => {
-        console.log('test');
         this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
       }),    
     );

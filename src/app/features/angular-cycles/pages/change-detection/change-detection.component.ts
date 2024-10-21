@@ -9,7 +9,6 @@ import { PokemonShowComponent } from '../../../../shared/components/pokemon-show
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-change-detection',
   standalone: true,
   imports: [CommonModule, ChildComponent, PokemonShowComponent],
   templateUrl: './change-detection.component.html',
@@ -48,7 +47,6 @@ export class ChangeDetectionComponent implements DoCheck, AfterViewChecked  {
         return this.#pokemonApiService.getPokemonById(randomId);
       }),
       tap((pokemon) => {
-        console.log('test');
         this.pokemon = pokemon;
         this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
       }),    
