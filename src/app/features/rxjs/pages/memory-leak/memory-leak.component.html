@@ -1,6 +1,36 @@
 <mat-card class="flex flex-col justify-between mt-4 p-4">        
     @if ( componentExist && way() === 'good') {
-        <app-good-destroy></app-good-destroy>
+        <div class="">
+            <p class="text-gray-400 text-2xl font-bold mt-0">Good destroy component</p>
+            <mat-radio-group class="grid grid-cols-2" [value]="selectedMethod()" (change)="selectMethod($event)">
+                <mat-radio-button class="grid grid-cols-2" value="stop">
+                    Stop
+                </mat-radio-button>
+                <mat-radio-button class="grid grid-cols-2" value="start">
+                    Start
+                </mat-radio-button>
+            </mat-radio-group>        
+            <br/>
+        </div>
+        <div>    
+<textarea highlight-js lang="ts">
+// component.ts    
+pokemon$ = of([]).pipe(
+    switchMap(() => this.getPokemonEveryTwoseconds()),
+    tap((pokemon) => {
+        this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
+    }),    
+);
+</textarea>
+<textarea highlight-js lang="html">
+// component.html     
+@let myPokemon = pokemon$ | async;
+<app-pokemon-show
+    [name]="myPokemon?.name || ''"
+    [picture]="myPokemon?.sprites?.bigPicture || ''">
+</app-pokemon-show> 
+</textarea> 
+        </div>
     } @else if (componentExist && way() === 'bad') {
         <app-bad-destroy></app-bad-destroy>
     } @else {
@@ -13,20 +43,19 @@
 </mat-card>
 
 <div class="grid grid-cols-2 gap-4 my-3">
-    <!--<app-pokemon-show
-        [name]="pokemon()?.name || ''"
-        [picture]="pokemon()?.sprites?.bigPicture || ''">
-    </app-pokemon-show>-->
-
-    @let myPokemon = pokemon$ | async; 
-    <app-pokemon-show
-        [name]="myPokemon?.name || ''"
-        [picture]="myPokemon?.sprites?.bigPicture || ''">
-    </app-pokemon-show>
-    
-    
-
-    <app-log-panel></app-log-panel>
+    @if ( componentExist && way() === 'good') {
+        @let myPokemon = pokemon$ | async;
+        <app-pokemon-show
+            [name]="myPokemon?.name || ''"
+            [picture]="myPokemon?.sprites?.bigPicture || ''">
+        </app-pokemon-show> 
+    } @else if (componentExist && way() === 'bad') { 
+        <app-pokemon-show
+            [name]="pokemon()?.name || ''"
+            [picture]="pokemon()?.sprites?.bigPicture || ''">
+        </app-pokemon-show>
+    }  
+    <app-log-panel ></app-log-panel>
 </div> 
     
     
