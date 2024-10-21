@@ -28,5 +28,12 @@ export const routes: Routes = [
         (c) => c.MemoryLeakComponent
       ),
   },
+  {
+    path: 'change-detection',
+    loadComponent: () =>
+      import('./features/angular-cycles/pages/change-detection/change-detection.component').then(
+        (c) => c.ChangeDetectionComponent
+      ),
+  },
   // Vous pouvez ajouter d'autres routes ici
 ];

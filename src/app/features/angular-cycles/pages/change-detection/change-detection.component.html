@@ -1,0 +1,8 @@
+<div style="height:100px">
+    <p>Parent component : {{ inputValue }}</p>
+    <button (click)="changeData()">Change Data</button>
+    <app-child [data]="data" [inputValue]="inputValue" (inputValueChange)="onInputValueChange($event)"></app-child>
+
+    <p>Counter: {{ counter }}</p>
+    
+</div>
