@@ -4,6 +4,9 @@
     <app-child [data]="data" [inputValue]="inputValue" (inputValueChange)="onInputValueChange($event)"></app-child>
 
     <p>Counter: {{ counter }}</p>
+    <input type="number" [(ngModel)]="counter" />
+
+    <p>Counter2: {{ counter2 }}</p>
     
 
     <!--@let myPokemon = pokemon$ | async;

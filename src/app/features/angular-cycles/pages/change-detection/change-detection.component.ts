@@ -7,12 +7,13 @@ import { RxjsService } from '../../../rxjs/services/rxjs.service';
 import { CommonModule } from '@angular/common';
 import { PokemonShowComponent } from '../../../../shared/components/pokemon-show/pokemon-show.component';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, ChildComponent, PokemonShowComponent],
+  imports: [CommonModule, FormsModule, ChildComponent, PokemonShowComponent],
   templateUrl: './change-detection.component.html',
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangeDetectionComponent implements DoCheck, AfterViewChecked  {
 
@@ -21,8 +22,10 @@ export class ChangeDetectionComponent implements DoCheck, AfterViewChecked  {
 
   data: string = 'Initial Data';
   inputValue: string = 'Initial Input Value';
-  // counter = 0;
+  
   private _counter = 0;
+  counter2 = 0;
+  
   get counter() {
     console.log('get counter');
     return this._counter;
@@ -33,14 +36,16 @@ export class ChangeDetectionComponent implements DoCheck, AfterViewChecked  {
     this._counter++;
   }
 
+  
+
   pokemon: Pokemon | null = null;
 
   // pokemon$ = this.autoUpdatePokemon();
   
   constructor() {    
     console.log('ParentComponent: Constructor');
-    this.autoUpdatePokemon().subscribe();
-    // toSignal(this.autoUpdatePokemon());
+    // this.autoUpdatePokemon().subscribe();
+    toSignal(this.autoUpdatePokemon());
   }
 
   /**
@@ -54,6 +59,7 @@ export class ChangeDetectionComponent implements DoCheck, AfterViewChecked  {
         return this.#pokemonApiService.getPokemonById(randomId);
       }),
       tap((pokemon) => {
+        this.counter2++;
         this.pokemon = pokemon;
         this.#rxjsService.addLog('Request interval launched ' + pokemon.name, 'request')
       }),    
