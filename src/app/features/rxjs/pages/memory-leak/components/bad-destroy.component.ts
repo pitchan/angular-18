@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, effect, inject, signal, untracked } from '@angular/core';
 import { Data } from '@angular/router';
 import { RxjsService } from '../../../services/rxjs.service';
 import { EMPTY, Observable, Subject, Subscriber, Subscription, catchError, interval, map, min, of, switchMap, take, takeUntil, tap } from 'rxjs';
@@ -57,7 +57,8 @@ export class BadDestroyComponent {
 
     constructor() {
         const status = this.selectedFunction();
-        this.executeFunction(status);        
+        this.executeFunction(status);   
+
     }
 
     /**

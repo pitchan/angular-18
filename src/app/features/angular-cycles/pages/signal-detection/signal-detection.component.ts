@@ -52,8 +52,8 @@ export class SignalDetectionComponent {
     this.data.set('Updated Data ' + Math.random());
   }
 
-  onInputValueChange(newValue: any) {
+  /*onInputValueChange(newValue: any) {
     console.log('ParentComponent: Input value changed to:', newValue);
     this.inputValue.set(newValue);  // Met à jour la valeur dans le parent
-  }
+  }*/
 }

@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild, computed, input, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
+import { BehaviorSubject, fromEvent, map, merge } from 'rxjs';
 
 @Component({
   selector: 'app-pokemon-show',
@@ -18,13 +20,24 @@ export class PokemonShowComponent {
       picture: this.picture(),
       isImageLoaded: signal(false)
     }    
-  });;
+  });
+
+  imageLoaded$ = new BehaviorSubject(false);
+  
+  showPokemon$ = merge(
+    toObservable(this.picture).pipe(map(() => false)),  // When image change
+    this.imageLoaded$.pipe(map(() => true)) // When image is loaded
+  );
 
   openPreview(imageUrl: string | undefined) {
     return;
   }
 
-  onImageLoad() {
+  onImageLoadWithObservable() {
+    this.imageLoaded$.next(true);
+  }
+
+  onImageLoadWithSignal() {
     this.state().isImageLoaded.set(true);
   }
 }

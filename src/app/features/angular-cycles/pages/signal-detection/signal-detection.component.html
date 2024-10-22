@@ -1,4 +1,4 @@
-<button (click)="changeData()">Change Data</button>
+<button (click)="changeData()">Change Data : {{ inputValueChange() }}</button>
 <app-child-signal [data]="data()" [inputValue]="inputValue()" [(inputValueChange)]="inputValueChange"></app-child-signal>
 
 <app-pokemon-show
