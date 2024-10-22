@@ -10,7 +10,7 @@ import { AfterViewChecked, ChangeDetectionStrategy, Component, DoCheck, EventEmi
 export class ChildComponent implements OnChanges, DoCheck, AfterViewChecked {
 
   @Input() data!: string;
-  @Input() inputValue!: string;  // Reçoit la valeur initiale du parent
+  @Input() inputValue!: string;  // Receive initial value from parent
   @Output() inputValueChange = new EventEmitter<string>();
 
   constructor() {
@@ -31,6 +31,6 @@ export class ChildComponent implements OnChanges, DoCheck, AfterViewChecked {
 
   onInputChange(event: any) {
     const newValue = event.target.value;
-    this.inputValueChange.emit(newValue);  // Émet la nouvelle valeur au parent
+    this.inputValueChange.emit(newValue);  // Emit new value to parent
   }
 }

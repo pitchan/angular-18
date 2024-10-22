@@ -39,8 +39,8 @@ export class ChangeDetectionComponent implements DoCheck, AfterViewChecked  {
   
   constructor() {    
     console.log('ParentComponent: Constructor');
-    // this.autoUpdatePokemon().subscribe();
-    toSignal(this.autoUpdatePokemon());
+    this.autoUpdatePokemon().subscribe();
+    // toSignal(this.autoUpdatePokemon());
   }
 
   /**
